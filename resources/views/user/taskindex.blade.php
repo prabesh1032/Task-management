@@ -40,7 +40,7 @@
 
                     @if($task->todo_checklist)
                         <div class="mt-6">
-                            <strong class="text-lg text-gray-800">TODO Checklist:</strong>
+                            <strong class="text-xl text-gray-800">TODO Checklist:</strong>
                             <ul class="list-disc list-inside text-gray-700 mt-2 space-y-1">
                                 @foreach(json_decode($task->todo_checklist) as $checklistItem)
                                     <li class="flex items-center">
