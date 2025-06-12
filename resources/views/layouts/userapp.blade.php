@@ -35,25 +35,9 @@
                     <i class="ri-dashboard-line mr-3 text-lg"></i>
                     <span class="font-medium">Dashboard</span>
                 </a>
-                <a href="{{ route('tasks.index') }}" class="flex items-center p-3 rounded-lg text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors duration-200">
+                <a href="{{ route('user.tasks.index') }}" class="flex items-center p-3 rounded-lg text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors duration-200">
                     <i class="ri-task-fill mr-3 text-lg"></i>
                     <span class="font-medium">My Tasks</span>
-                </a>
-                <a href="{{ route('tasks.create') }}" class="flex items-center p-3 rounded-lg text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors duration-200">
-                    <i class="ri-add-circle-line mr-3 text-lg"></i>
-                    <span class="font-medium">Create Task</span>
-                </a>
-                <a href="#" class="flex items-center p-3 rounded-lg text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors duration-200">
-                    <i class="ri-team-line mr-3 text-lg"></i>
-                    <span class="font-medium">Team</span>
-                </a>
-                <a href="#" class="flex items-center p-3 rounded-lg text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors duration-200">
-                    <i class="ri-calendar-todo-line mr-3 text-lg"></i>
-                    <span class="font-medium">Calendar</span>
-                </a>
-                <a href="#" class="flex items-center p-3 rounded-lg text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors duration-200">
-                    <i class="ri-file-chart-line mr-3 text-lg"></i>
-                    <span class="font-medium">Reports</span>
                 </a>
             </nav>
 
