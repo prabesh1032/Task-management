@@ -43,28 +43,21 @@
                     <i class="ri-add-circle-line mr-3 text-lg"></i>
                     <span class="font-medium">Create Task</span>
                 </a>
-                <a href="#" class="flex items-center p-3 rounded-lg text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors duration-200">
+                <a href="{{ route('team') }}" class="flex items-center p-3 rounded-lg text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors duration-200">
                     <i class="ri-team-line mr-3 text-lg"></i>
                     <span class="font-medium">Team</span>
                 </a>
-                <a href="#" class="flex items-center p-3 rounded-lg text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors duration-200">
-                    <i class="ri-calendar-todo-line mr-3 text-lg"></i>
-                    <span class="font-medium">Calendar</span>
-                </a>
-                <a href="#" class="flex items-center p-3 rounded-lg text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors duration-200">
-                    <i class="ri-file-chart-line mr-3 text-lg"></i>
-                    <span class="font-medium">Reports</span>
+                <a href="{{ route('useractivity') }}" class="flex items-center p-3 rounded-lg text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors duration-200">
+                    <i class="ri-account-circle-fill mr-3 text-lg"></i>
+                    <span class="font-medium">User Activity</span>
                 </a>
             </nav>
 
             <!-- User & Logout -->
             <div class="p-4 border-t border-gray-200">
-                <div class="flex items-center mb-4 p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200">
-                    <img src="{{ asset('useravatar.avif') }}" alt="User Avatar" class="w-10 h-10 rounded-full mr-3">
-                    <div>
-                        <p class="font-medium text-gray-800">{{ Auth::user()->name }}</p>
-                        <p class="text-xs text-gray-500">{{ Auth::user()->email }}</p>
-                    </div>
+                <div class="mb-4 p-3 rounded-lg bg-indigo-50 text-indigo-700 transition-colors duration-200">
+                    <p class="font-medium">Welcome back,</p>
+                    <p class="text-sm">{{ Auth::user()->name }} 👋</p>
                 </div>
                 <form action="{{ route('logout') }}" method="POST">
                     @csrf
@@ -97,9 +90,11 @@
                             <span class="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">3</span>
                         </button>
 
-                        <!-- User Avatar -->
+                        <!-- Admin Badge -->
                         <div class="flex items-center space-x-2">
-                            <img src="{{ asset('useravatar.avif') }}" alt="User Avatar" class="w-9 h-9 rounded-full">
+                            <div class="px-3 py-1 rounded-full bg-gradient-to-r from-indigo-100 to-purple-100 text-indigo-800 text-sm font-medium">
+                                <i class="ri-shield-star-line mr-1"></i> Admin
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -120,19 +115,20 @@
                             </div>
                         </div>
                     </div>
-
+                    @php
+                    $completed = \App\Models\Task::where('status', 'completed')->count();
+                    @endphp
                     <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                         <div class="flex items-center justify-between">
                             <div>
                                 <p class="text-sm font-medium text-gray-500">Completed</p>
-                                <p class="text-2xl font-bold mt-1">{{ \App\Models\Task::where('completed', true)->count() }}</p>
+                                <p class="text-2xl font-bold mt-1">{{$completed}}</p>
                             </div>
                             <div class="p-3 rounded-lg bg-green-50 text-green-600">
                                 <i class="ri-checkbox-circle-line text-xl"></i>
                             </div>
                         </div>
                     </div>
-
                     <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                         <div class="flex items-center justify-between">
                             <div>

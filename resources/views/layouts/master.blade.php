@@ -58,79 +58,71 @@
         @yield('content')
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-gray-300">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <!-- Company Info -->
-                <div class="space-y-4">
-                    <div class="flex items-center space-x-2">
-                        <div class="w-8 h-8 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 flex items-center justify-center">
-                            <i class="ri-task-line text-white text-lg"></i>
-                        </div>
-                        <span class="text-xl font-bold text-white">TaskFlow</span>
+   <!-- Footer -->
+<footer class="bg-gray-900 text-gray-300">
+    <div class="container mx-auto px-6 py-12">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <!-- Brand Column -->
+            <div class="col-span-2 md:col-span-1 space-y-4">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 flex items-center justify-center">
+                        <i class="ri-task-line text-white text-lg"></i>
                     </div>
-                    <p class="text-gray-400">
-                        The modern task management platform for teams who want to accomplish more.
-                    </p>
-                    <div class="flex space-x-4">
-                        <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">
-                            <i class="ri-twitter-fill text-xl"></i>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">
-                            <i class="ri-facebook-fill text-xl"></i>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">
-                            <i class="ri-linkedin-fill text-xl"></i>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">
-                            <i class="ri-github-fill text-xl"></i>
-                        </a>
-                    </div>
+                    <span class="text-xl font-bold text-white">TaskFlow</span>
                 </div>
-
-
-
-                <!-- Resources -->
-                <div>
-                    <h3 class="text-white font-semibold text-lg mb-4">Resources</h3>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">Documentation</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">Tutorials</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">Blog</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">Support</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">API Status</a></li>
-                    </ul>
-                </div>
-
-                <!-- Company -->
-                <div>
-                    <h3 class="text-white font-semibold text-lg mb-4">Company</h3>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">About Us</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">Careers</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">Press</a></li>
-                        <li><a href="#contact" class="text-gray-400 hover:text-white transition-colors duration-200">Contact</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">Partners</a></li>
-                    </ul>
+                <p class="text-gray-400 text-sm">
+                    Modern task management for productive teams.
+                </p>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="ri-twitter-fill text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="ri-linkedin-fill text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="ri-github-fill text-xl"></i>
+                    </a>
                 </div>
             </div>
 
-            <div class="border-t border-gray-800 mt-12 pt-8">
-                <div class="flex flex-col md:flex-row justify-between items-center">
-                    <p class="text-gray-500 text-sm">
-                        &copy; {{ now()->year }} TaskFlow. All rights reserved.
-                    </p>
-                    <div class="flex space-x-6 mt-4 md:mt-0">
-                        <a href="#" class="text-gray-500 hover:text-white text-sm transition-colors duration-200">Privacy Policy</a>
-                        <a href="#" class="text-gray-500 hover:text-white text-sm transition-colors duration-200">Terms of Service</a>
-                        <a href="#" class="text-gray-500 hover:text-white text-sm transition-colors duration-200">Cookie Policy</a>
-                    </div>
-                </div>
+            <!-- Links Columns -->
+            <div>
+                <h3 class="text-white font-semibold mb-4">Resources</h3>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Docs</a></li>
+                    <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Blog</a></li>
+                    <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Support</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h3 class="text-white font-semibold mb-4">Company</h3>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#" class="text-gray-400 hover:text-white transition-colors">About</a></li>
+                    <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Careers</a></li>
+                    <li><a href="#contact" class="text-gray-400 hover:text-white transition-colors">Contact</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h3 class="text-white font-semibold mb-4">Legal</h3>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Privacy</a></li>
+                    <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Terms</a></li>
+                    <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Cookies</a></li>
+                </ul>
             </div>
         </div>
-    </footer>
 
+        <!-- Copyright -->
+        <div class="border-t border-gray-800 mt-8 pt-8 text-center md:text-left">
+            <p class="text-gray-500 text-sm">
+                &copy; {{ now()->year }} TaskFlow. All rights reserved.
+            </p>
+        </div>
+    </div>
+</footer>
     @stack('scripts')
 </body>
 </html>

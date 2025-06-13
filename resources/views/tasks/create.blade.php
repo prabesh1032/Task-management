@@ -6,40 +6,32 @@
 <div class="container mx-auto max-w-4xl">
     <h1 class="text-3xl font-bold mb-6">Create Task</h1>
     <form action="{{ route('tasks.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
-        {{-- CSRF Token --}}
         @csrf
-        <div class="mb-4">
-            <label for="title" class="block text-lg font-medium text-gray-700">Task Title</label>
-            <input type="text" id="title" name="title" class="w-full border rounded-lg p-3" placeholder="Enter Task Title" value="{{ old('title') }}" required>
-            @error('title')
-                <span class="text-red-600 text-sm mt-1 block">*{{ $message }}</span>
-            @enderror
+
+        <!-- Basic Task Info -->
+        <div class="grid grid-cols-1 gap-6">
+            <div>
+                <label for="title" class="block text-lg font-medium text-gray-700">Task Title</label>
+                <input type="text" id="title" name="title" class="w-full border rounded-lg p-3"
+                       placeholder="Enter Task Title" value="{{ old('title') }}" required>
+                @error('title')
+                    <span class="text-red-600 text-sm mt-1 block">*{{ $message }}</span>
+                @enderror
+            </div>
+
+            <div>
+                <label for="description" class="block text-lg font-medium text-gray-700">Description</label>
+                <textarea id="description" name="description" class="w-full border rounded-lg p-3"
+                          placeholder="Describe task">{{ old('description') }}</textarea>
+                @error('description')
+                    <span class="text-red-600 text-sm mt-1 block">*{{ $message }}</span>
+                @enderror
+            </div>
         </div>
 
-        <div class="mb-4">
-            <label for="description" class="block text-lg font-medium text-gray-700">Description</label>
-            <textarea id="description" name="description" class="w-full border rounded-lg p-3" placeholder="Describe task">{{ old('description') }}</textarea>
-            @error('description')
-                <span class="text-red-600 text-sm mt-1 block">*{{ $message }}</span>
-            @enderror
-        </div>
-
-        {{-- <div class="mb-4">
-            <label for="status" class="block text-lg font-medium text-gray-700">Status</label>
-            <select id="status" name="status" class="border rounded w-full p-2" required>
-                <option value="pending" {{ old('status') == 'pending' ? 'selected' : '' }}>Pending</option>
-                <option value="completed" {{ old('status') == 'completed' ? 'selected' : '' }}>Completed</option>
-                <option value="overdue" {{ old('status') == 'overdue' ? 'selected' : '' }}>Overdue</option>
-            </select>
-            @error('status')
-                <div class="text-red-600 mt-2 text-sm">
-                    *{{ $message }}
-                </div>
-            @enderror
-        </div> --}}
-
-        <div class="flex space-x-4 mb-4">
-            <div class="flex-1">
+        <!-- Priority, Due Date, and Assignment -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
                 <label for="priority" class="block text-lg font-medium text-gray-700">Priority</label>
                 <select id="priority" name="priority" class="w-full border rounded-lg p-3" required>
                     <option value="low" {{ old('priority') == 'low' ? 'selected' : '' }}>Low</option>
@@ -51,68 +43,96 @@
                 @enderror
             </div>
 
-        <div class="flex-1">
+            <div>
                 <label for="due_date" class="block text-lg font-medium text-gray-700">Due Date</label>
-                <input type="date" id="due_date" name="due_date" class="w-full border rounded-lg p-3" value="{{ old('due_date') }}" required>
+                <input type="date" id="due_date" name="due_date" class="w-full border rounded-lg p-3"
+                       value="{{ old('due_date') }}" required>
                 @error('due_date')
+                    <span class="text-red-600 text-sm mt-1 block">*{{ $message }}</span>
+                @enderror
+            </div>
+            <div>
+                <label for="assigned_to" class="block text-lg font-medium text-gray-700">Assign To</label>
+                <select id="assigned_to" name="assigned_to" class="w-full border rounded-lg p-3" required>
+                    <option value="">Select User</option>
+                    @foreach($users as $user)
+                        <option value="{{ $user->id }}" {{ old('assigned_to') == $user->id ? 'selected' : '' }}>
+                            {{ $user->name }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('assigned_to')
                     <span class="text-red-600 text-sm mt-1 block">*{{ $message }}</span>
                 @enderror
             </div>
         </div>
 
-        <div class="mb-4">
-            <label for="assigned_to" class="block text-lg font-medium text-gray-700">Assign To</label>
-            <select id="assigned_to" name="assigned_to" class="border rounded w-full p-2" required>
-                <option value="">Select User</option>
-                @foreach($users as $user)
-                    <option value="{{ $user->id }}" {{ old('assigned_to') == $user->id ? 'selected' : '' }}>
-                        {{ $user->name }}
-                    </option>
-                @endforeach
-            </select>
-            @error('assigned_to')
-                <div class="text-red-600 mt-2 text-sm">
-                    *{{ $message }}
-                </div>
-            @enderror
-        </div>
+        <!-- Checklist Section -->
+        <div class="bg-gray-50 p-4 rounded-lg">
+            <h2 class="text-xl font-semibold mb-4">Checklist Items</h2>
 
-        <div class="mb-4">
-            <label for="todo_checklist" class="block text-lg font-medium text-gray-700">TODO Checklist</label>
-            <div id="checklist-items" class="space-y-2">
-                <input type="text" name="todo_checklist[]" class="w-full border rounded-lg p-3" placeholder="Checklist Item 1">
+            <div id="checklist-container" class="space-y-3 mb-4">
+                <!-- Initial checklist item -->
+                <div class="flex items-center space-x-3 checklist-item">
+                    <input type="text" name="todo_checklist[]"
+                           class="flex-1 border rounded-lg p-3"
+                           placeholder="Enter checklist item">
+                    <button type="button" class="remove-checklist-item text-red-500 hover:text-red-700 p-2">
+                        Remove
+                    </button>
+                </div>
             </div>
-            <button type="button" id="add-checklist-item" class="mt-2 bg-blue-500 text-white py-2 px-4 rounded-lg">
-                + Add Item
+
+            <button type="button" id="add-checklist-item"
+                    class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">
+                + Add Another Item
             </button>
+
             @error('todo_checklist.*')
-                <span class="text-red-600 text-sm mt-1 block">*{{ $message }}</span>
+                <span class="text-red-600 text-sm mt-2 block">*{{ $message }}</span>
             @enderror
         </div>
 
-        {{-- <div class="mb-4">
-            <label for="attachment" class="block text-lg font-medium text-gray-700">Attachment</label>
-            <input type="file" id="attachment" name="attachment" class="border rounded w-full p-2">
-            @error('attachment')
-                <div class="text-red-600 mt-2 text-sm">
-                    *{{ $message }}
-                </div>
-            @enderror
-        </div> --}}
-
-        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Create</button>
+        <!-- Submit Button -->
+        <div class="flex justify-end">
+            <button type="submit" class="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600">
+                Create Task
+            </button>
+        </div>
     </form>
 </div>
 
 <script>
-    document.getElementById('add-checklist-item').addEventListener('click', function() {
-        const checklistItems = document.getElementById('checklist-items');
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.name = 'todo_checklist[]';
-        input.className = 'w-full border rounded-lg p-3';
-        input.placeholder = `Checklist Item ${checklistItems.children.length + 1}`;
-        checklistItems.appendChild(input);
+    document.addEventListener('DOMContentLoaded', function() {
+        const container = document.getElementById('checklist-container');
+        const addButton = document.getElementById('add-checklist-item');
+
+        // Add new checklist item
+        addButton.addEventListener('click', function() {
+            const newItem = document.createElement('div');
+            newItem.className = 'flex items-center space-x-3 checklist-item';
+            newItem.innerHTML = `
+                <input type="text" name="todo_checklist[]"
+                       class="flex-1 border rounded-lg p-3"
+                       placeholder="Enter checklist item">
+                <button type="button" class="remove-checklist-item text-red-500 hover:text-red-700 p-2">
+                    Remove
+                </button>
+            `;
+            container.appendChild(newItem);
+        });
+
+        // Remove checklist item
+        container.addEventListener('click', function(e) {
+            if (e.target.classList.contains('remove-checklist-item')) {
+                const item = e.target.closest('.checklist-item');
+                if (container.querySelectorAll('.checklist-item').length > 1) {
+                    item.remove();
+                } else {
+                    item.querySelector('input').value = '';
+                }
+            }
+        });
     });
 </script>
 @endsection

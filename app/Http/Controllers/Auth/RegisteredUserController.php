@@ -27,24 +27,31 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request)
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email',
+            'password' => 'required|confirmed|min:6',
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif,avif|max:2048', // Validate profile picture
         ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+        $data = $request->only(['name', 'email']);
 
-        event(new Registered($user));
+        // Handle image upload for the profile picture
+        if ($request->hasFile('profile_picture')) {
+            $photoname = time() . '.' . $request->profile_picture->extension();
+            $request->profile_picture->move(public_path('images'), $photoname); // Save to public/images
+            $data['profile_picture'] = $photoname; // Save file name in the database
+        }
+
+        $data['password'] = Hash::make($request->password); // Encrypt the password
+
+        // Create the user
+        $user = User::create($data);
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        return redirect()->route('dashboard')->with('success', 'Registration successful!');
     }
 }

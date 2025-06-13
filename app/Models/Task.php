@@ -34,4 +34,12 @@ class Task extends Model
     protected $casts = [
         'due_date' => 'date', // Cast due_date to a Carbon instance
     ];
+    public static function getCompletionStats()
+    {
+        return self::selectRaw('status, count(*) as count')
+            ->groupBy('status')
+            ->pluck('count', 'status')
+            ->toArray();
+    }
+
 }

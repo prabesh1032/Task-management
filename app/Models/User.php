@@ -20,6 +20,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
+        'profile_picture', // Added profile picture field
     ];
 
     /**
@@ -51,5 +53,9 @@ class User extends Authenticatable
     public function isAdmin()
     {
         return $this->role === 'admin';
+    }
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
     }
 }

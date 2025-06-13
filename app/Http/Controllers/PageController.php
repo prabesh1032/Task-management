@@ -14,7 +14,18 @@ class PageController extends Controller
     }
     public function dashboard()
     {
-        return view('dashboard');
+        $taskDistribution = Task::selectRaw('status, count(*) as count')
+            ->groupBy('status')
+            ->pluck('count', 'status')
+            ->toArray();
+
+        // Task Priority Data
+        $taskPriority = Task::selectRaw('priority, count(*) as count')
+            ->groupBy('priority')
+            ->pluck('count', 'priority')
+            ->toArray();
+
+        return view('dashboard', compact('taskDistribution', 'taskPriority'));
     }
 
     public function userdashboard()
@@ -27,20 +38,41 @@ class PageController extends Controller
             ->take(5)
             ->get();
 
-        // Calculate task summaries
-        $totalTasks = Task::where('assigned_to', $user->id)->count();
-        $pendingTasks = Task::where('assigned_to', $user->id)->where('status', 'pending')->count();
-        $inProgressTasks = Task::where('assigned_to', $user->id)->where('status', 'in_progress')->count();
-        $completedTasks = Task::where('assigned_to', $user->id)->where('status', 'completed')->count();
-        $overdueTasks = Task::where('assigned_to', $user->id)->where('status', 'overdue')->count();
+        // Task Distribution Counts
+        $pendingTasks = Task::where('assigned_to', $user->id)
+            ->where('status', 'pending')
+            ->count();
+        $inProgressTasks = Task::where('assigned_to', $user->id)
+            ->where('status', 'in_progress')
+            ->count();
+        $completedTasks = Task::where('assigned_to', $user->id)
+            ->where('status', 'completed')
+            ->count();
+        $overdueTasks = Task::where('assigned_to', $user->id)
+            ->where('status', 'overdue')
+            ->count();
 
-        return view('user.dashboard', compact(
-            'recentTasks',
-            'totalTasks',
-            'pendingTasks',
-            'inProgressTasks',
-            'completedTasks',
-            'overdueTasks'
-        ));
+        // Task Priority Counts
+        $lowPriorityTasks = Task::where('assigned_to', $user->id)
+            ->where('priority', 'low')
+            ->count();
+        $mediumPriorityTasks = Task::where('assigned_to', $user->id)
+            ->where('priority', 'medium')
+            ->count();
+        $highPriorityTasks = Task::where('assigned_to', $user->id)
+            ->where('priority', 'high')
+            ->count();
+
+        return view('user.dashboard', [
+            'recentTasks' => $recentTasks,
+            'pendingTasks' => $pendingTasks,
+            'inProgressTasks' => $inProgressTasks,
+            'completedTasks' => $completedTasks,
+            'overdueTasks' => $overdueTasks,
+            'lowPriorityTasks' => $lowPriorityTasks,
+            'mediumPriorityTasks' => $mediumPriorityTasks,
+            'highPriorityTasks' => $highPriorityTasks,
+            'totalTasks' => $pendingTasks + $inProgressTasks + $completedTasks + $overdueTasks
+        ]);
     }
 }
