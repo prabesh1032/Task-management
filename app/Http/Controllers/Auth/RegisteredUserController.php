@@ -14,6 +14,11 @@ use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
 {
+    public function __construct()
+    {
+        // Ensure only authenticated admins can access registration endpoints
+        $this->middleware(['auth', 'isadmin']);
+    }
     /**
      * Display the registration view.
      */
@@ -33,6 +38,7 @@ class RegisteredUserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email',
             'password' => 'required|confirmed|min:6',
+            'role' => 'nullable|string|in:admin,member',
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif,avif|max:2048', // Validate profile picture
         ]);
 
@@ -46,12 +52,13 @@ class RegisteredUserController extends Controller
         }
 
         $data['password'] = Hash::make($request->password); // Encrypt the password
+        // Assign role - default to 'member' unless admin provided a valid role
+        $data['role'] = $request->input('role', 'member');
 
         // Create the user
         $user = User::create($data);
 
-        Auth::login($user);
-
-        return redirect()->route('dashboard')->with('success', 'Registration successful!');
+        // Do not auto-login the created user. Redirect back to admin dashboard.
+        return redirect()->route('dashboard')->with('success', 'User created successfully!');
     }
 }

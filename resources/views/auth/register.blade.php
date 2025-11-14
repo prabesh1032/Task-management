@@ -110,12 +110,24 @@
                                 </div>
                                 <label class="block w-full">
                                     <span class="sr-only">Choose profile photo</span>
-                                    <input type="file" name="profile_picture" required accept="image/*"
+                                    <input id="profile_picture" type="file" name="profile_picture" accept="image/*"
                                         class="block w-full text-white text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-white/10 file:text-white hover:file:bg-white/20 focus:outline-none"
                                         onchange="document.getElementById('profile_preview').src = window.URL.createObjectURL(this.files[0])">
                                 </label>
                             </div>
                             @error('profile_picture')
+                                <p class="mt-2 text-sm text-red-300">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Role selection (admin can set new user role) -->
+                        <div>
+                            <label for="role" class="block text-sm font-medium text-white/80 mb-2">Role</label>
+                            <select id="role" name="role" class="w-full pl-3 pr-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white">
+                                <option value="member" selected>Member</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                            @error('role')
                                 <p class="mt-2 text-sm text-red-300">{{ $message }}</p>
                             @enderror
                         </div>

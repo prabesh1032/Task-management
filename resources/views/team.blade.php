@@ -7,6 +7,11 @@
     <!-- Header with buttons -->
     <div class="flex justify-between items-center">
         <h2 class="text-2xl font-bold text-gray-800">Team Members</h2>
+        @if(auth()->check() && auth()->user()->role === 'admin')
+        <a href="{{ route('teams.create') }}" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-colors duration-200">
+            <i class="ri-user-add-line mr-2"></i>Create User
+        </a>
+        @endif
     </div>
     <!-- Search and filter section -->
     <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
@@ -66,8 +71,8 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
-                                {{ $user->is_admin ? 'bg-purple-100 text-purple-800' : 'bg-green-100 text-green-800' }}">
-                                {{ $user->is_admin ? 'Admin' : 'Member' }}
+                                {{ $user->role === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-green-100 text-green-800' }}">
+                                {{ $user->role === 'admin' ? 'Admin' : 'Member' }}
                             </span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
@@ -83,15 +88,22 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                             <div class="flex justify-end space-x-3">
+                                @if(auth()->check() && auth()->user()->role === 'admin')
+                                <a href="{{ route('teams.edit', $user) }}" class="text-indigo-600 hover:text-indigo-900">
+                                    <i class="ri-pencil-line"></i>
+                                </a>
+                                <form action="{{ route('teams.destroy', $user) }}" method="POST" class="inline-block" onsubmit="return confirm('Delete this user?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="text-red-600 hover:text-red-900">
+                                        <i class="ri-delete-bin-line"></i>
+                                    </button>
+                                </form>
+                                @else
                                 <a href="#" class="text-indigo-600 hover:text-indigo-900">
                                     <i class="ri-eye-line"></i>
                                 </a>
-                                <a href="#" class="text-gray-600 hover:text-gray-900">
-                                    <i class="ri-pencil-line"></i>
-                                </a>
-                                <a href="#" class="text-red-600 hover:text-red-900">
-                                    <i class="ri-delete-bin-line"></i>
-                                </a>
+                                @endif
                             </div>
                         </td>
                     </tr>

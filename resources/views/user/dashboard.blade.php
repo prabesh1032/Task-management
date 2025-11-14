@@ -11,7 +11,6 @@
     <p class="text-gray-500 mb-8">
         Here's a quick overview of your tasks and recent updates.
     </p>
-
     <!-- Dashboard Graphs -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         <!-- Task Distribution Section -->
@@ -85,7 +84,6 @@
         </div>
     </div>
 </div>
-
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>

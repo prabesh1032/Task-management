@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use Nette\Utils\Paginator;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\TeamController;
+use App\Http\Controllers\TeamManagementController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\UserTaskController;
 
@@ -15,6 +16,8 @@ Route::middleware(['auth', 'isadmin'])->group(function () {
     Route::resource('tasks', TaskController::class);
     Route::get('/team', [TeamController::class, 'index'])->name('team');
     Route::get('/team/useractivity', [TeamController::class, 'useractivity'])->name('useractivity');
+    // Admin teams management
+    Route::resource('teams', TeamManagementController::class)->except(['show']);
 
 });
 Route::middleware('auth')->group(function () {

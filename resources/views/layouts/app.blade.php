@@ -51,6 +51,12 @@
                     <i class="ri-account-circle-fill mr-3 text-lg"></i>
                     <span class="font-medium">User Activity</span>
                 </a>
+                @if(auth()->check() && auth()->user()->role === 'admin')
+                <a href="{{ route('teams.index') }}" class="flex items-center p-3 rounded-lg text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors duration-200">
+                    <i class="ri-settings-3-line mr-3 text-lg"></i>
+                    <span class="font-medium">Manage Users</span>
+                </a>
+                @endif
             </nav>
 
             <!-- User & Logout -->
@@ -90,10 +96,10 @@
                             <span class="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">3</span>
                         </button>
 
-                        <!-- Admin Badge -->
+                        <!-- Role Badge -->
                         <div class="flex items-center space-x-2">
                             <div class="px-3 py-1 rounded-full bg-gradient-to-r from-indigo-100 to-purple-100 text-indigo-800 text-sm font-medium">
-                                <i class="ri-shield-star-line mr-1"></i> Admin
+                                <i class="ri-shield-star-line mr-1"></i> {{ strtoupper(auth()->user()->role ?? 'user') }}
                             </div>
                         </div>
                     </div>
