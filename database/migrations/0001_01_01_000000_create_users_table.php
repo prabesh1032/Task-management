@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('profile_picture')->nullable();
             $table->string('profile_picture_public_id')->nullable();
             $table->string('role')->default('member');
-            $table->rememberToken();
+            $table->string('remember_token', 100)->nullable();
             $table->timestamps();
         });
 
@@ -40,7 +40,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('sessions');
-        Schema::dropIfExists('password_reset_Exists');
+        Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('users');
     }
 };
