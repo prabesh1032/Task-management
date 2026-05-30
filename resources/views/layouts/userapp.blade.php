@@ -18,94 +18,110 @@
     @stack('styles')
 </head>
 <body class="font-sans antialiased bg-gray-50">
-    <div class="flex min-h-screen">
-        <!-- Sidebar -->
-        <div class="w-64 h-screen sticky top-0 bg-white shadow-md border-r border-gray-200 flex flex-col">
-            <!-- Logo -->
-            <div class="flex items-center justify-center p-6 border-b border-gray-200">
-                <div class="w-10 h-10 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 flex items-center justify-center">
-                    <i class="ri-task-line text-white text-xl"></i>
-                </div>
-                <span class="ml-3 font-bold text-xl text-gray-800">TaskFlow</span>
-            </div>
+<div class="flex min-h-screen relative">
 
-            <!-- Navigation -->
-            <nav class="flex-1 p-4 space-y-1 overflow-y-auto">
-                <a href="{{ route('dashboard') }}" class="flex items-center p-3 rounded-lg text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors duration-200">
-                    <i class="ri-dashboard-line mr-3 text-lg"></i>
-                    <span class="font-medium">Dashboard</span>
-                </a>
-                <a href="{{ route('user.tasks.index') }}" class="flex items-center p-3 rounded-lg text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors duration-200">
-                    <i class="ri-task-fill mr-3 text-lg"></i>
-                    <span class="font-medium">My Tasks</span>
-                </a>
-            </nav>
+    <!-- Mobile Overlay -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/30 z-20 hidden lg:hidden" onclick="closeSidebar()"></div>
 
-            <!-- User & Logout -->
-            <div class="p-4 border-t border-gray-200">
-                <!-- User Avatar in Sidebar -->
-                <div class="flex items-center mb-4 p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200">
-                    <a href="{{ route('userprofile.index') }}" class="flex items-center">
-                        <img src="{{ Auth::user()->profile_picture ?: asset('useravatar.avif') }}"
-                            alt="User Avatar"
-                            class="w-10 h-10 rounded-full mr-3">
-                        <div>
-                            <p class="font-medium text-gray-800">{{ Auth::user()->name }}</p>
-                            <p class="text-xs text-gray-500">{{ Auth::user()->email }}</p>
-                        </div>
-                    </a>
-                </div>
-                <form action="{{ route('logout') }}" method="POST">
-                    @csrf
-                    <button type="submit" class="w-full flex items-center p-3 rounded-lg text-gray-700 hover:bg-red-50 hover:text-red-600 transition-colors duration-200">
-                        <i class="ri-logout-box-r-line mr-3 text-lg"></i>
-                        <span class="font-medium">Logout</span>
-                    </button>
-                </form>
+    <!-- Sidebar -->
+    <aside id="sidebar" class="fixed lg:sticky top-0 left-0 h-screen w-64 z-30 bg-white border-r border-gray-200
+           flex flex-col transform -translate-x-full lg:translate-x-0 transition-transform duration-200">
+
+        <!-- Logo -->
+        <div class="flex items-center gap-3 px-5 py-4 border-b border-gray-200">
+            <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center flex-shrink-0">
+                <i class="ri-task-line text-white text-base"></i>
             </div>
+            <span class="font-semibold text-gray-900 text-lg">TaskFlow</span>
         </div>
 
-        <!-- Main Content -->
-        <div class="flex-1 flex flex-col overflow-hidden">
-            <!-- Top Header -->
-            <header class="bg-white shadow-sm z-10">
-                <div class="flex items-center justify-between p-4">
-                    <h1 class="text-2xl font-bold text-gray-800">@yield('title')</h1>
+        <!-- Nav -->
+        <nav class="flex-1 px-3 py-3 space-y-0.5 overflow-y-auto">
+            <p class="text-[10px] font-semibold uppercase tracking-widest text-gray-400 px-3 pt-1 pb-1">Main</p>
+            <a href="{{ route('dashboard') }}" class="nav-link @if(request()->routeIs('dashboard')) nav-link-active @endif">
+                <i class="ri-dashboard-line text-lg"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="{{ route('user.tasks.index') }}" class="nav-link @if(request()->routeIs('user.tasks.index')) nav-link-active @endif">
+                <i class="ri-task-fill text-lg"></i>
+                <span>My Tasks</span>
+            </a>
 
-                    <div class="flex items-center space-x-4">
-                        <!-- Search -->
-                        <div class="relative">
-                            <input type="text" placeholder="Search..."
-                                   class="pl-10 pr-4 py-2 w-64 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
-                            <i class="ri-search-line absolute left-3 top-2.5 text-gray-400"></i>
-                        </div>
+            <p class="text-[10px] font-semibold uppercase tracking-widest text-gray-400 px-3 pt-3 pb-1">Workspace</p>
+            <a href="{{ route('userprofile.index') }}" class="nav-link @if(request()->routeIs('userprofile.*')) nav-link-active @endif">
+                <i class="ri-user-line text-lg"></i>
+                <span>Profile</span>
+            </a>
+        </nav>
 
-                        <!-- Notifications -->
-                        <button class="relative p-2 rounded-full hover:bg-gray-100">
-                            <i class="ri-notification-3-line text-xl text-gray-600"></i>
-                            <span class="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">3</span>
-                        </button>
+        <!-- Footer -->
+        <div class="px-3 py-3 border-t border-gray-200">
+            <div class="px-3 py-2.5 rounded-lg bg-gray-50 mb-2">
+                <p class="text-xs text-gray-500">Welcome back</p>
+                <p class="text-sm font-medium text-gray-800">{{ Auth::user()->name }} 👋</p>
+            </div>
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit" class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm text-gray-600 hover:bg-red-50 hover:text-red-600 transition-colors duration-150">
+                    <i class="ri-logout-box-r-line text-lg"></i>
+                    <span class="font-medium">Logout</span>
+                </button>
+            </form>
+        </div>
+    </aside>
 
-                        <!-- User Avatar in Top Header -->
-                        <div class="flex items-center space-x-2">
-                            <a href="{{ route('userprofile.index') }}">
-                                <img src="{{ Auth::user()->profile_picture ?: asset('useravatar.avif') }}"
-                                    alt="User Avatar"class="w-9 h-9 rounded-full">
-                            </a>
-                        </div>
+    <!-- Main -->
+    <div class="flex-1 flex flex-col min-w-0 lg:ml-0">
+
+        <!-- Header -->
+        <header class="sticky top-0 z-10 bg-white border-b border-gray-200">
+            <div class="flex items-center justify-between px-4 py-3 gap-3">
+
+                <!-- Hamburger (mobile) + Title -->
+                <div class="flex items-center gap-3">
+                    <button onclick="openSidebar()" class="lg:hidden w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 bg-gray-50 text-gray-600 hover:bg-gray-100">
+                        <i class="ri-menu-2-line text-lg"></i>
+                    </button>
+                    <h1 class="text-base font-semibold text-gray-900 lg:text-lg">@yield('title')</h1>
+                </div>
+
+                <!-- Right controls -->
+                <div class="flex items-center gap-2">
+                    <!-- Search (hidden on small) -->
+                    <div class="relative hidden sm:block">
+                        <input type="text" placeholder="Search..."
+                               class="pl-9 pr-3 py-2 w-48 md:w-56 text-sm rounded-lg border border-gray-200 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent focus:bg-white transition">
+                        <i class="ri-search-line absolute left-3 top-2.5 text-gray-400 text-sm"></i>
+                    </div>
+
+                    <!-- Role Badge -->
+                    <div class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-indigo-50 text-indigo-700 text-xs font-semibold">
+                        <i class="ri-shield-star-line text-sm"></i>
+                        {{ strtoupper(auth()->user()->role ?? 'user') }}
                     </div>
                 </div>
-            </header>
+            </div>
+        </header>
 
-            <!-- Main Content Area -->
-            <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
-
-                <!-- Dynamic Content -->
-                @yield('content')
-            </main>
-        </div>
+        <!-- Page Content -->
+        <main class="flex-1 overflow-y-auto p-4 md:p-6 bg-gray-50">
+            @yield('content')
+        </main>
     </div>
+</div>
 
-    @stack('scripts')
+<!-- Sidebar JS -->
+<script>
+function openSidebar() {
+    document.getElementById('sidebar').classList.remove('-translate-x-full');
+    document.getElementById('sidebar-overlay').classList.remove('hidden');
+}
+function closeSidebar() {
+    document.getElementById('sidebar').classList.add('-translate-x-full');
+    document.getElementById('sidebar-overlay').classList.add('hidden');
+}
+</script>
+
+@stack('scripts')
 </body>
 </html>
