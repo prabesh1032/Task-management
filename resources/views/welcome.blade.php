@@ -38,7 +38,7 @@
                         <label for="email" class="mb-2 block text-sm font-medium text-slate-200">Email</label>
                         <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus
                             class="block w-full rounded-xl border border-white/20 bg-slate-900/70 px-4 py-3 text-white placeholder:text-slate-400 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/40"
-                            placeholder="you@company.com">
+                            placeholder="you@email.....">
                         <x-input-error :messages="$errors->get('email')" class="mt-2 text-sm text-red-300" />
                     </div>
 

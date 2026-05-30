@@ -3,118 +3,122 @@
 @section('title', 'Dashboard')
 
 @section('content')
-<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <!-- Task Distribution Section -->
-    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-        <h2 class="text-xl font-bold text-gray-800 mb-4">Task Distribution</h2>
-        <div class="chart-container" style="position: relative; height:300px; width:100%">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+
+    <!-- Task Distribution -->
+    <div class="bg-white rounded-xl border border-gray-100 p-5">
+        <div class="mb-4">
+            <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide">Task Distribution</h2>
+        </div>
+        <div style="position:relative; height:280px; width:100%">
             <canvas id="distributionChart"></canvas>
         </div>
     </div>
 
-    <!-- Task Priority Section -->
-    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-        <h2 class="text-xl font-bold text-gray-800 mb-4">Task Priority Levels</h2>
-        <div class="chart-container" style="position: relative; height:300px; width:100%">
+    <!-- Task Priority -->
+    <div class="bg-white rounded-xl border border-gray-100 p-5">
+        <div class="mb-4">
+            <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide">Priority Levels</h2>
+        </div>
+        <div style="position:relative; height:280px; width:100%">
             <canvas id="priorityChart"></canvas>
         </div>
     </div>
+
 </div>
+@endsection
 
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Task Distribution Chart (Pie)
-        const distCtx = document.getElementById('distributionChart').getContext('2d');
-        new Chart(distCtx, {
-            type: 'pie',
-            data: {
-                labels: ['Pending', 'In Progress', 'Completed'],
-                datasets: [{
-                    data: [
-                        {{ $taskDistribution['pending'] ?? 0 }},
-                        {{ $taskDistribution['in_progress'] ?? 0 }},
-                        {{ $taskDistribution['completed'] ?? 0 }}
-                    ],
-                    backgroundColor: [
-                        '#3b82f6', // Blue for Pending
-                        '#f59e0b', // Amber for In Progress
-                        '#10b981'  // Green for Completed
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'right',
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return `${context.label}: ${context.raw}`;
-                            }
-                        }
-                    }
-                }
-            }
-        });
+document.addEventListener('DOMContentLoaded', function () {
 
-        // Task Priority Chart (Bar)
-        const priorityCtx = document.getElementById('priorityChart').getContext('2d');
-        new Chart(priorityCtx, {
-            type: 'bar',
-            data: {
-                labels: ['Low', 'Medium', 'High'],
-                datasets: [{
-                    label: 'Number of Tasks',
-                    data: [
-                        {{ $taskPriority['low'] ?? 0 }},
-                        {{ $taskPriority['medium'] ?? 0 }},
-                        {{ $taskPriority['high'] ?? 0 }}
-                    ],
-                    backgroundColor: [
-                        '#10b981', // Green for Low
-                        '#f59e0b', // Amber for Medium
-                        '#ef4444'  // Red for High
-                    ],
-                    borderColor: [
-                        '#10b981',
-                        '#f59e0b',
-                        '#ef4444'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            precision: 0
-                        }
+    const fontColor = '#6b7280';
+
+    // Pie — Task Distribution
+    new Chart(document.getElementById('distributionChart'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Pending', 'In Progress', 'Completed'],
+            datasets: [{
+                data: [
+                    {{ $taskDistribution['pending'] ?? 0 }},
+                    {{ $taskDistribution['in_progress'] ?? 0 }},
+                    {{ $taskDistribution['completed'] ?? 0 }}
+                ],
+                backgroundColor: ['#3b82f6', '#f59e0b', '#10b981'],
+                borderWidth: 2,
+                borderColor: '#ffffff',
+                hoverOffset: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '60%',
+            plugins: {
+                legend: {
+                    position: 'right',
+                    labels: {
+                        color: fontColor,
+                        font: { size: 12 },
+                        padding: 16,
+                        usePointStyle: true,
+                        pointStyleWidth: 8
                     }
                 },
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return `${context.dataset.label}: ${context.raw}`;
-                            }
-                        }
+                tooltip: {
+                    callbacks: {
+                        label: ctx => ` ${ctx.label}: ${ctx.raw} tasks`
                     }
                 }
             }
-        });
+        }
     });
+
+    // Bar — Priority Levels
+    new Chart(document.getElementById('priorityChart'), {
+        type: 'bar',
+        data: {
+            labels: ['Low', 'Medium', 'High'],
+            datasets: [{
+                label: 'Tasks',
+                data: [
+                    {{ $taskPriority['low'] ?? 0 }},
+                    {{ $taskPriority['medium'] ?? 0 }},
+                    {{ $taskPriority['high'] ?? 0 }}
+                ],
+                backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
+                borderRadius: 6,
+                borderWidth: 0,
+                maxBarThickness: 48
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    grid: { display: false },
+                    ticks: { color: fontColor, font: { size: 12 } }
+                },
+                y: {
+                    beginAtZero: true,
+                    grid: { color: '#f3f4f6' },
+                    ticks: { precision: 0, color: fontColor, font: { size: 12 } }
+                }
+            },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: ctx => ` ${ctx.raw} tasks`
+                    }
+                }
+            }
+        }
+    });
+
+});
 </script>
 @endpush
-@endsection
