@@ -33,14 +33,7 @@
             <input type="password" name="password_confirmation" class="w-full px-3 py-2 border rounded">
         </div>
 
-        <div class="mb-4">
-            <label class="block text-sm font-medium mb-2">Role</label>
-            <select name="role" class="w-full px-3 py-2 border rounded">
-                <option value="member" {{ old('role', $team->role) === 'member' ? 'selected' : '' }}>Member</option>
-                <option value="admin" {{ old('role', $team->role) === 'admin' ? 'selected' : '' }}>Admin</option>
-            </select>
-            @error('role') <p class="text-sm text-red-500">{{ $message }}</p> @enderror
-        </div>
+        <input type="hidden" name="role" value="member">
 
         <div class="mb-4">
             <label class="block text-sm font-medium mb-2">Profile Photo (optional)</label>

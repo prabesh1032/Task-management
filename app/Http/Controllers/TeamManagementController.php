@@ -12,7 +12,7 @@ class TeamManagementController extends Controller
     // List users (teams)
     public function index()
     {
-        $users = User::withCount('assignedTasks')->orderBy('created_at', 'desc')->paginate(10);
+        $users = User::where('role', 'member')->withCount('assignedTasks')->orderBy('created_at', 'desc')->paginate(10);
         $sort  = request()->input('sort', 'newest');
         return view('team', compact('users', 'sort'));
     }
@@ -30,7 +30,7 @@ class TeamManagementController extends Controller
             'name'            => 'required|string|max:255',
             'email'           => 'required|email|unique:users,email',
             'password'        => 'required|confirmed|min:6',
-            'role'            => 'nullable|string|in:admin,member',
+            'role'            => 'nullable|string|in:member',
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif,avif|max:2048',
         ]);
 
@@ -48,7 +48,7 @@ class TeamManagementController extends Controller
         }
 
         $data['password'] = Hash::make($request->password);
-        $data['role']     = $request->input('role', 'member');
+        $data['role']     = 'member';
 
         User::create($data);
 
@@ -68,7 +68,7 @@ class TeamManagementController extends Controller
             'name'            => 'required|string|max:255',
             'email'           => 'required|email|unique:users,email,' . $team->id,
             'password'        => 'nullable|confirmed|min:6',
-            'role'            => 'nullable|string|in:admin,member',
+            'role'            => 'nullable|string|in:member',
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif,avif|max:2048',
         ]);
 
@@ -94,7 +94,7 @@ class TeamManagementController extends Controller
             $data['profile_picture_public_id'] = $uploaded['public_id'] ?? null;
         }
 
-        $data['role'] = $request->input('role', $team->role ?? 'member');
+        $data['role'] = 'member';
 
         $team->update($data);
 

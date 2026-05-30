@@ -41,6 +41,11 @@
                 <i class="ri-dashboard-line text-lg"></i>
                 <span>Dashboard</span>
             </a>
+            <a href="{{ route('team') }}"
+               class="nav-link @if(request()->routeIs('team')) nav-link-active @endif">
+                <i class="ri-team-line text-lg"></i>
+                <span>Team</span>
+            </a>
             <a href="{{ route('tasks.index') }}"
                class="nav-link @if(request()->routeIs('tasks.index')) nav-link-active @endif">
                 <i class="ri-checkbox-multiple-line text-lg"></i>
@@ -53,11 +58,6 @@
             </a>
 
             <p class="text-[10px] font-semibold uppercase tracking-widest text-gray-400 px-3 pt-3 pb-1">Workspace</p>
-            <a href="{{ route('team') }}"
-               class="nav-link @if(request()->routeIs('team')) nav-link-active @endif">
-                <i class="ri-team-line text-lg"></i>
-                <span>Team</span>
-            </a>
             <a href="{{ route('useractivity') }}"
                class="nav-link @if(request()->routeIs('useractivity')) nav-link-active @endif">
                 <i class="ri-pulse-line text-lg"></i>
@@ -120,7 +120,7 @@
                         <i class="ri-search-line absolute left-3 top-2.5 text-gray-400 text-sm"></i>
                     </div>
 
-                   
+
 
                     <!-- Role Badge -->
                     <div class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full

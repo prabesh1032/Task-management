@@ -17,7 +17,7 @@ class TeamController extends Controller
         }
 
         // Base query with eager loading
-        $query = User::withCount('assignedTasks');
+        $query = User::withCount('assignedTasks')->where('role', 'member');
 
         // Apply sorting
         switch ($sort) {
@@ -45,7 +45,7 @@ class TeamController extends Controller
     public function useractivity(Request $request)
     {
         // Base query with counts
-        $query = User::withCount([
+        $query = User::where('role', 'member')->withCount([
             'assignedTasks as pending_tasks_count' => function($query) {
                 $query->where('status', 'pending');
             },
@@ -71,8 +71,8 @@ class TeamController extends Controller
 
         // Additional stats for the summary cards
         $stats = [
-            'total_users' => User::count(),
-            'active_today' => User::whereDate('last_active_at', today())->count(),
+            'total_users' => User::where('role', 'member')->count(),
+            'active_today' => User::where('role', 'member')->whereDate('last_active_at', today())->count(),
             'total_completed' => \App\Models\Task::where('status', 'completed')->count(),
             'avg_completion' => round(\App\Models\Task::where('status', 'completed')
                 ->selectRaw('COUNT(*) / COUNT(DISTINCT assigned_to) as avg')

@@ -6,6 +6,7 @@ use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class TaskController extends Controller
 {
@@ -28,18 +29,32 @@ class TaskController extends Controller
 
     public function create()
     {
-        $users = User::all();
+        $users = User::where('role', 'member')->orderBy('name')->get();
+
+        if ($users->isEmpty()) {
+            return redirect()->route('teams.create')->with('error', 'Create at least one team member before creating a task.');
+        }
+
         return view('tasks.create', compact('users'));
     }
 
     public function store(Request $request)
     {
+        if (!User::where('role', 'member')->exists()) {
+            return redirect()->route('teams.create')->with('error', 'Task can only be created after adding a team member.');
+        }
+
         $request->validate([
             'title'            => 'required|max:255',
             'description'      => 'nullable',
             'priority'         => 'required|in:low,medium,high',
             'due_date'         => 'required|date',
-            'assigned_to'      => 'required|exists:users,id',
+            'assigned_to'      => [
+                'required',
+                Rule::exists('users', 'id')->where(function ($query) {
+                    $query->where('role', 'member');
+                }),
+            ],
             'todo_checklist'   => 'nullable|array',
             'todo_checklist.*' => 'nullable|string|max:255',
         ]);
@@ -68,7 +83,12 @@ class TaskController extends Controller
             'description'      => 'nullable',
             'priority'         => 'required|in:low,medium,high',
             'due_date'         => 'required|date',
-            'assigned_to'      => 'required|exists:users,id',
+            'assigned_to'      => [
+                'required',
+                Rule::exists('users', 'id')->where(function ($query) {
+                    $query->where('role', 'member');
+                }),
+            ],
             'todo_checklist'   => 'nullable|array',
             'todo_checklist.*' => 'nullable|string|max:255',
         ]);
@@ -98,7 +118,7 @@ class TaskController extends Controller
 
     public function edit(Task $task)
     {
-        $users = User::all();
+        $users = User::where('role', 'member')->orderBy('name')->get();
         return view('tasks.edit', compact('task', 'users'));
     }
 
