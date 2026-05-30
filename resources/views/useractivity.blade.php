@@ -3,131 +3,131 @@
 @section('title', 'User Activity')
 
 @section('content')
-<div class="space-y-6">
-    <!-- Header with search and filter -->
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <h2 class="text-2xl font-bold text-gray-800">User Activity</h2>
-
-    </div>
+<div class="space-y-8">
     <!-- User Activity Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        @foreach($users as $user)
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow duration-200">
-            <div class="p-5">
-                <div class="flex items-start">
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+        @forelse($users as $user)
+        @php
+            $total = max($user->pending_tasks_count + $user->in_progress_tasks_count + $user->completed_tasks_count, 1);
+            $pendingPct = round(($user->pending_tasks_count / $total) * 100);
+            $progressPct = round(($user->in_progress_tasks_count / $total) * 100);
+            $completedPct = round(($user->completed_tasks_count / $total) * 100);
+            $totalTasks = $user->pending_tasks_count + $user->in_progress_tasks_count + $user->completed_tasks_count;
+        @endphp
+        <div class="group bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+            <!-- Gradient banner -->
+            <div class="h-16 bg-gradient-to-r {{ $user->is_admin ? 'from-purple-500 to-indigo-500' : 'from-sky-400 to-blue-500' }}"></div>
+
+            <div class="px-5 pb-5 -mt-8">
+                <div class="flex items-end justify-between">
                     <!-- User Avatar -->
-                    <div class="flex-shrink-0 relative">
-                        <img class="h-10 w-10 rounded-full object-cover"
+                    <div class="relative">
+                        <img class="h-16 w-16 rounded-2xl object-cover ring-4 ring-white shadow-md"
                             src="{{ $user->profile_picture ?: asset('useravatar.avif') }}"
                             alt="{{ $user->name }}">
-                        <span class="absolute bottom-0 right-0 bg-green-500 rounded-full w-3 h-3 border-2 border-white"></span>
+                        <span class="absolute -bottom-0.5 -right-0.5 bg-green-500 rounded-full w-4 h-4 border-2 border-white" title="Online"></span>
                     </div>
 
-                    <!-- User Info -->
-                    <div class="ml-4 flex-1">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <h3 class="text-lg font-semibold text-gray-900">{{ $user->name }}</h3>
-                                <p class="text-sm text-gray-500 flex items-center">
-                                    <i class="ri-mail-line mr-1"></i> {{ $user->email }}
-                                </p>
-                            </div>
-                            <span class="px-2 py-1 rounded-full text-xs font-medium
-                                {{ $user->is_admin ? 'bg-purple-100 text-purple-800' : 'bg-gray-100 text-gray-800' }}">
-                                {{ $user->is_admin ? 'Admin' : 'Member' }}
-                            </span>
-                        </div>
+                    <span class="px-3 py-1 rounded-full text-xs font-semibold mt-8
+                        {{ $user->is_admin ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700' }}">
+                        <i class="{{ $user->is_admin ? 'ri-shield-star-line' : 'ri-user-3-line' }} mr-1"></i>
+                        {{ $user->is_admin ? 'Admin' : 'Member' }}
+                    </span>
+                </div>
 
-                        <!-- Task Stats with Progress Bars -->
-                        <div class="mt-4 space-y-3">
-                            <!-- Pending Tasks -->
-                            <div>
-                                <div class="flex justify-between text-xs text-gray-500 mb-1">
-                                    <span>Pending ({{ $user->pending_tasks_count }})</span>
-                                    <span>{{ $user->pending_tasks_count }} tasks</span>
-                                </div>
-                                <div class="w-full bg-gray-200 rounded-full h-2">
-                                    <div class="bg-blue-500 h-2 rounded-full"
-                                         style="width: {{ ($user->pending_tasks_count / max($user->pending_tasks_count + $user->in_progress_tasks_count + $user->completed_tasks_count, 1)) * 100 }}%"></div>
-                                </div>
-                            </div>
+                <!-- User Info -->
+                <div class="mt-3">
+                    <h3 class="text-lg font-bold text-gray-900 truncate">{{ $user->name }}</h3>
+                    <p class="text-sm text-gray-500 flex items-center truncate">
+                        <i class="ri-mail-line mr-1.5 text-gray-400"></i>
+                        <span class="truncate">{{ $user->email }}</span>
+                    </p>
+                </div>
 
-                            <!-- In Progress Tasks -->
-                            <div>
-                                <div class="flex justify-between text-xs text-gray-500 mb-1">
-                                    <span>In Progress ({{ $user->in_progress_tasks_count }})</span>
-                                    <span>{{ $user->in_progress_tasks_count }} tasks</span>
-                                </div>
-                                <div class="w-full bg-gray-200 rounded-full h-2">
-                                    <div class="bg-yellow-500 h-2 rounded-full"
-                                         style="width: {{ ($user->in_progress_tasks_count / max($user->pending_tasks_count + $user->in_progress_tasks_count + $user->completed_tasks_count, 1)) * 100 }}%"></div>
-                                </div>
-                            </div>
+                <!-- Combined progress bar -->
+                <div class="mt-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-medium text-gray-500">Task Overview</span>
+                        <span class="text-xs font-semibold text-gray-700">{{ $totalTasks }} total</span>
+                    </div>
+                    <div class="flex w-full h-2.5 rounded-full overflow-hidden bg-gray-100">
+                        <div class="bg-blue-500 h-full transition-all duration-500" style="width: {{ $pendingPct }}%" title="Pending"></div>
+                        <div class="bg-amber-400 h-full transition-all duration-500" style="width: {{ $progressPct }}%" title="In Progress"></div>
+                        <div class="bg-emerald-500 h-full transition-all duration-500" style="width: {{ $completedPct }}%" title="Completed"></div>
+                    </div>
+                </div>
 
-                            <!-- Completed Tasks -->
-                            <div>
-                                <div class="flex justify-between text-xs text-gray-500 mb-1">
-                                    <span>Completed ({{ $user->completed_tasks_count }})</span>
-                                    <span>{{ $user->completed_tasks_count }} tasks</span>
-                                </div>
-                                <div class="w-full bg-gray-200 rounded-full h-2">
-                                    <div class="bg-green-500 h-2 rounded-full"
-                                         style="width: {{ ($user->completed_tasks_count / max($user->pending_tasks_count + $user->in_progress_tasks_count + $user->completed_tasks_count, 1)) * 100 }}%"></div>
-                                </div>
-                            </div>
-                        </div>
+                <!-- Task stat chips -->
+                <div class="mt-4 grid grid-cols-3 gap-2 text-center">
+                    <div class="rounded-xl bg-blue-50 py-2.5">
+                        <p class="text-lg font-bold text-blue-600 leading-none">{{ $user->pending_tasks_count }}</p>
+                        <p class="text-[11px] font-medium text-blue-500/80 mt-1">Pending</p>
+                    </div>
+                    <div class="rounded-xl bg-amber-50 py-2.5">
+                        <p class="text-lg font-bold text-amber-600 leading-none">{{ $user->in_progress_tasks_count }}</p>
+                        <p class="text-[11px] font-medium text-amber-500/80 mt-1">In Progress</p>
+                    </div>
+                    <div class="rounded-xl bg-emerald-50 py-2.5">
+                        <p class="text-lg font-bold text-emerald-600 leading-none">{{ $user->completed_tasks_count }}</p>
+                        <p class="text-[11px] font-medium text-emerald-500/80 mt-1">Completed</p>
                     </div>
                 </div>
             </div>
 
             <!-- Footer with action buttons -->
-            <div class="bg-gray-50 px-5 py-3 border-t border-gray-200 flex justify-end space-x-3">
-                <button class="text-indigo-600 hover:text-indigo-900 p-2 rounded-full hover:bg-indigo-50">
-                    <i class="ri-chat-3-line"></i>
-                </button>
-                <button class="text-gray-600 hover:text-gray-900 p-2 rounded-full hover:bg-gray-100">
-                    <i class="ri-user-settings-line"></i>
-                </button>
-                <button class="text-blue-600 hover:text-blue-900 p-2 rounded-full hover:bg-blue-50">
-                    <i class="ri-task-line"></i>
-                </button>
-            </div>
+            @php
+    $totalTasks = $user->pending_tasks_count + $user->in_progress_tasks_count + $user->completed_tasks_count;
+    $rate = $totalTasks ? round(($user->completed_tasks_count / $totalTasks) * 100) : 0;
+@endphp
+<div class="bg-gray-50/80 px-5 py-3 border-t border-gray-100 flex items-center justify-between">
+    <span class="text-xs font-medium text-gray-500">Completion Rate</span>
+    <span class="text-sm font-bold {{ $rate >= 70 ? 'text-emerald-600' : ($rate >= 40 ? 'text-amber-600' : 'text-red-500') }}">
+        {{ $rate }}%
+    </span>
+</div>
+
         </div>
-        @endforeach
+        @empty
+        <div class="col-span-full flex flex-col items-center justify-center py-16 text-center">
+            <div class="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center mb-4">
+                <i class="ri-user-search-line text-3xl text-gray-400"></i>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-700">No users found</h3>
+            <p class="text-sm text-gray-500 mt-1">There are no users to display right now.</p>
+        </div>
+        @endforelse
     </div>
 
     <!-- Pagination -->
     @if($users->hasPages())
-    <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6 rounded-b-lg">
+    <div class="bg-white px-4 py-4 flex items-center justify-between border border-gray-100 rounded-2xl shadow-sm">
         <div class="flex-1 flex justify-between sm:hidden">
             @if($users->onFirstPage())
-                <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-300 bg-white">
+                <span class="relative inline-flex items-center px-4 py-2 border border-gray-200 text-sm font-medium rounded-xl text-gray-300 bg-white cursor-not-allowed">
                     Previous
                 </span>
             @else
-                <a href="{{ $users->previousPageUrl() }}" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                <a href="{{ $users->previousPageUrl() }}" class="relative inline-flex items-center px-4 py-2 border border-gray-200 text-sm font-medium rounded-xl text-gray-700 bg-white hover:bg-gray-50">
                     Previous
                 </a>
             @endif
 
             @if($users->hasMorePages())
-                <a href="{{ $users->nextPageUrl() }}" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                <a href="{{ $users->nextPageUrl() }}" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-200 text-sm font-medium rounded-xl text-gray-700 bg-white hover:bg-gray-50">
                     Next
                 </a>
             @else
-                <span class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-300 bg-white">
+                <span class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-200 text-sm font-medium rounded-xl text-gray-300 bg-white cursor-not-allowed">
                     Next
                 </span>
             @endif
         </div>
         <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-            <div>
-                <p class="text-sm text-gray-700">
-                    Showing <span class="font-medium">{{ $users->firstItem() }}</span>
-                    to <span class="font-medium">{{ $users->lastItem() }}</span>
-                    of <span class="font-medium">{{ $users->total() }}</span> results
-                </p>
-            </div>
+            <p class="text-sm text-gray-600">
+                Showing <span class="font-semibold text-gray-900">{{ $users->firstItem() }}</span>
+                to <span class="font-semibold text-gray-900">{{ $users->lastItem() }}</span>
+                of <span class="font-semibold text-gray-900">{{ $users->total() }}</span> results
+            </p>
             <div>
                 {{ $users->links() }}
             </div>

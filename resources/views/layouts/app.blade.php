@@ -64,15 +64,6 @@
                 <i class="ri-pulse-line text-lg"></i>
                 <span>User Activity</span>
             </a>
-
-            @if(auth()->check() && auth()->user()->role === 'admin')
-            <p class="text-[10px] font-semibold uppercase tracking-widest text-gray-400 px-3 pt-3 pb-1">Admin</p>
-            <a href="{{ route('teams.index') }}"
-               class="nav-link @if(request()->routeIs('teams.index')) nav-link-active @endif">
-                <i class="ri-settings-3-line text-lg"></i>
-                <span>Manage Users</span>
-            </a>
-            @endif
         </nav>
 
         <!-- Footer -->

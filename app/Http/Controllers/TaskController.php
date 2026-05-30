@@ -22,7 +22,8 @@ class TaskController extends Controller
             $query->where('priority', $request->priority);
         }
 
-        $tasks = $query->get();
+        // paginate for grid view (9 per page)
+        $tasks = $query->orderBy('created_at', 'desc')->paginate(9)->withQueryString();
 
         return view('tasks.index', compact('tasks'));
     }
@@ -44,11 +45,13 @@ class TaskController extends Controller
             return redirect()->route('teams.create')->with('error', 'Task can only be created after adding a team member.');
         }
 
+        $today = now()->toDateString();
+
         $request->validate([
             'title'            => 'required|max:255',
             'description'      => 'nullable',
             'priority'         => 'required|in:low,medium,high',
-            'due_date'         => 'required|date',
+            'due_date'         => 'required|date|after_or_equal:' . $today,
             'assigned_to'      => [
                 'required',
                 Rule::exists('users', 'id')->where(function ($query) {
@@ -78,11 +81,13 @@ class TaskController extends Controller
 
     public function update(Request $request, Task $task)
     {
+        $today = now()->toDateString();
+
         $request->validate([
             'title'            => 'required|max:255',
             'description'      => 'nullable',
             'priority'         => 'required|in:low,medium,high',
-            'due_date'         => 'required|date',
+            'due_date'         => 'required|date|after_or_equal:' . $today,
             'assigned_to'      => [
                 'required',
                 Rule::exists('users', 'id')->where(function ($query) {

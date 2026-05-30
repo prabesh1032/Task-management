@@ -110,7 +110,7 @@ class TeamManagementController extends Controller
 
         // Delete profile picture from Cloudinary if exists
         if ($team->profile_picture_public_id) {
-            Cloudinary::destroy($team->profile_picture_public_id);
+            Cloudinary::uploadApi()->destroy($team->profile_picture_public_id);
         }
 
         $team->delete();
