@@ -40,14 +40,6 @@
                     <a href="{{ route('home') }}" class="text-gray-700 hover:text-indigo-600 px-1 pt-1 text-sm font-medium transition-colors duration-200">
                         Home
                     </a>
-                    <div class="flex items-center space-x-4 ml-6">
-                        <a href="{{ route('login') }}" class="text-gray-700 hover:text-indigo-600 text-sm font-medium transition-colors duration-200">
-                            Sign In
-                        </a>
-                        <a href="{{ route('login') }}" class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:shadow-md transition-all duration-200">
-                            Get Started
-                        </a>
-                    </div>
                 </div>
             </div>
         </div>
