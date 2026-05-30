@@ -6,6 +6,9 @@ cd /var/www/html
 echo "Running migrations..."
 php artisan migrate:fresh --force --no-interaction
 
+echo "Seeding database..."
+php artisan db:seed --force --no-interaction
+
 echo "Caching config, routes, views..."
 php artisan config:cache
 php artisan route:cache
