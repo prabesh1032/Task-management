@@ -3,8 +3,10 @@ set -e
 
 cd /var/www/html
 
-echo "Generating app key if not set..."
-php artisan key:generate --no-interaction --force 2>/dev/null || true
+# Create .env file from environment variables if it doesn't exist
+if [ ! -f .env ]; then
+    cp .env.example .env
+fi
 
 echo "Running migrations..."
 php artisan migrate --force --no-interaction
