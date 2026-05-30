@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet" />
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')
 </head>
@@ -134,41 +135,6 @@
 
         <!-- Page Content -->
         <main class="flex-1 overflow-y-auto p-4 md:p-6 bg-gray-50">
-
-            <!-- Stats Cards -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-                <div class="bg-white rounded-xl border border-gray-100 p-5 flex items-center justify-between">
-                    <div>
-                        <p class="text-xs font-medium text-gray-500">Total Tasks</p>
-                        <p class="text-2xl font-semibold mt-1">{{ \App\Models\Task::count() }}</p>
-                    </div>
-                    <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
-                        <i class="ri-todo-line text-xl"></i>
-                    </div>
-                </div>
-
-                @php $completed = \App\Models\Task::where('status', 'completed')->count(); @endphp
-                <div class="bg-white rounded-xl border border-gray-100 p-5 flex items-center justify-between">
-                    <div>
-                        <p class="text-xs font-medium text-gray-500">Completed</p>
-                        <p class="text-2xl font-semibold mt-1">{{ $completed }}</p>
-                    </div>
-                    <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center">
-                        <i class="ri-checkbox-circle-line text-xl"></i>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-xl border border-gray-100 p-5 flex items-center justify-between">
-                    <div>
-                        <p class="text-xs font-medium text-gray-500">Team Members</p>
-                        <p class="text-2xl font-semibold mt-1">{{ \App\Models\User::count() }}</p>
-                    </div>
-                    <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center">
-                        <i class="ri-team-line text-xl"></i>
-                    </div>
-                </div>
-            </div>
-
             @yield('content')
         </main>
     </div>

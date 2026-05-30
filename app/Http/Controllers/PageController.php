@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,6 +15,10 @@ class PageController extends Controller
     }
     public function dashboard()
     {
+        $totalTasks = Task::count();
+        $completedTasks = Task::where('status', 'completed')->count();
+        $teamMembersCount = User::where('role', 'member')->count();
+
         $taskDistribution = Task::selectRaw('status, count(*) as count')
             ->groupBy('status')
             ->pluck('count', 'status')
@@ -25,7 +30,7 @@ class PageController extends Controller
             ->pluck('count', 'priority')
             ->toArray();
 
-        return view('dashboard', compact('taskDistribution', 'taskPriority'));
+        return view('dashboard', compact('taskDistribution', 'taskPriority', 'totalTasks', 'completedTasks', 'teamMembersCount'));
     }
 
     public function userdashboard()

@@ -3,6 +3,38 @@
 @section('title', 'Dashboard')
 
 @section('content')
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+    <div class="bg-white rounded-xl border border-gray-100 p-5 flex items-center justify-between">
+        <div>
+            <p class="text-xs font-medium text-gray-500">Total Tasks</p>
+            <p class="text-2xl font-semibold mt-1">{{ $totalTasks }}</p>
+        </div>
+        <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
+            <i class="ri-todo-line text-xl"></i>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl border border-gray-100 p-5 flex items-center justify-between">
+        <div>
+            <p class="text-xs font-medium text-gray-500">Completed</p>
+            <p class="text-2xl font-semibold mt-1">{{ $completedTasks }}</p>
+        </div>
+        <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center">
+            <i class="ri-checkbox-circle-line text-xl"></i>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl border border-gray-100 p-5 flex items-center justify-between">
+        <div>
+            <p class="text-xs font-medium text-gray-500">Team Members</p>
+            <p class="text-2xl font-semibold mt-1">{{ $teamMembersCount }}</p>
+        </div>
+        <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center">
+            <i class="ri-team-line text-xl"></i>
+        </div>
+    </div>
+</div>
+
 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
 
     <!-- Task Distribution -->
