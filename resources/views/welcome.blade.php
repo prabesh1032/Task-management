@@ -1,90 +1,76 @@
-@extends('layouts.master')
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-@section('content')
-    <!-- Hero Section -->
-    <section class="relative bg-gradient-to-br from-indigo-900 to-purple-800 text-white overflow-hidden min-h-screen" id="hero">
-        <div class="absolute inset-0 opacity-20">
-            <div class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20"></div>
-        </div>
+    <title>{{ config('app.name', 'TaskFlow') }} | Sign In</title>
 
-        <div class="container mx-auto px-6 py-24 md:py-32 flex flex-col md:flex-row items-center gap-12 relative z-10">
-            <!-- Left Column - Hero Text -->
-            <div class="md:w-1/2">
-                <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">
-                    <span class="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-500">
-                        Work Smarter, Not Harder
-                    </span>
-                </h1>
-                <p class="text-xl md:text-2xl text-gray-300 mb-10">
-                    The ultimate task management platform that helps you organize, prioritize, and collaborate with ease.
-                </p>
-                <div class="flex flex-col sm:flex-row gap-4">
-                    <a href="#features" class="px-8 py-4 bg-cyan-500 hover:bg-cyan-600 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg shadow-cyan-500/20">
-                        Explore Features
-                    </a>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet" />
+
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+<body class="min-h-screen text-slate-100" style="font-family: 'Space Grotesk', sans-serif;">
+    <main class="relative min-h-screen overflow-hidden bg-slate-950">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(8,145,178,0.35),transparent_40%),radial-gradient(circle_at_80%_10%,rgba(37,99,235,0.35),transparent_35%),radial-gradient(circle_at_70%_80%,rgba(14,116,144,0.25),transparent_35%)]"></div>
+        <div class="absolute inset-0 opacity-20 [background-image:linear-gradient(rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.08)_1px,transparent_1px)] [background-size:32px_32px]"></div>
+
+        <div class="relative z-10 flex min-h-screen items-center justify-center px-6 py-12">
+            <div class="w-full max-w-md rounded-3xl border border-white/15 bg-white/10 p-8 shadow-[0_30px_100px_rgba(8,145,178,0.25)] backdrop-blur-xl">
+                <div class="mb-8 text-center">
+                    <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-600 shadow-lg shadow-cyan-500/40">
+                        <i class="ri-task-line text-3xl text-white"></i>
+                    </div>
+                    <h1 class="text-3xl font-bold tracking-tight text-white">TaskFlow</h1>
+                    <p class="mt-2 text-sm text-slate-200">Secure workspace access</p>
                 </div>
-            </div>
 
-            <!-- Right Column - Login Form -->
-            <div class="md:w-1/2 bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20 shadow-xl">
-                <h2 class="text-2xl font-bold mb-6 text-center">Sign In to Your Account</h2>
+                <x-auth-session-status class="mb-4 text-sm text-emerald-300" :status="session('status')" />
 
-                <x-auth-session-status class="mb-4" :status="session('status')" />
-
-                <form method="POST" action="{{ route('login') }}">
+                <form method="POST" action="{{ route('login') }}" class="space-y-4">
                     @csrf
 
-                    <div class="mb-4">
-                        <label for="email" class="block text-sm font-medium text-white/80 mb-2">Email</label>
-                        <input id="email" type="email" name="email" :value="old('email')" required autofocus
-                            class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent">
-                        <x-input-error :messages="$errors->get('email')" class="mt-2 text-red-300" />
+                    <div>
+                        <label for="email" class="mb-2 block text-sm font-medium text-slate-200">Email</label>
+                        <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus
+                            class="block w-full rounded-xl border border-white/20 bg-slate-900/70 px-4 py-3 text-white placeholder:text-slate-400 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/40"
+                            placeholder="you@company.com">
+                        <x-input-error :messages="$errors->get('email')" class="mt-2 text-sm text-red-300" />
                     </div>
 
-                    <div class="mb-4">
-                        <label for="password" class="block text-sm font-medium text-white/80 mb-2">Password</label>
+                    <div>
+                        <label for="password" class="mb-2 block text-sm font-medium text-slate-200">Password</label>
                         <input id="password" type="password" name="password" required autocomplete="current-password"
-                            class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent">
-                        <x-input-error :messages="$errors->get('password')" class="mt-2 text-red-300" />
+                            class="block w-full rounded-xl border border-white/20 bg-slate-900/70 px-4 py-3 text-white placeholder:text-slate-400 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/40"
+                            placeholder="Enter your password">
+                        <x-input-error :messages="$errors->get('password')" class="mt-2 text-sm text-red-300" />
                     </div>
 
-                    <div class="flex items-center justify-between mb-6">
-                        <label for="remember_me" class="inline-flex items-center">
-                            <input id="remember_me" type="checkbox" class="rounded bg-white/10 border-white/20 text-cyan-500 focus:ring-cyan-500" name="remember">
-                            <span class="ms-2 text-sm text-white/80">{{ __('Remember me') }}</span>
+                    <div class="flex items-center justify-between pt-1">
+                        <label for="remember_me" class="inline-flex items-center gap-2 text-sm text-slate-200">
+                            <input id="remember_me" type="checkbox" name="remember" class="rounded border-white/30 bg-slate-900/60 text-cyan-500 focus:ring-cyan-400/60">
+                            Remember me
                         </label>
 
                         @if (Route::has('password.request'))
-                            <a href="{{ route('password.request') }}" class="text-sm text-cyan-300 hover:text-cyan-200 underline">
-                                {{ __('Forgot password?') }}
-                            </a>
+                            <a href="{{ route('password.request') }}" class="text-sm text-cyan-300 hover:text-cyan-200">Forgot password?</a>
                         @endif
                     </div>
 
-                    <button type="submit" class="w-full py-3 px-4 bg-cyan-600 hover:bg-cyan-700 text-white font-semibold rounded-lg transition duration-200">
-                        {{ __('Log in') }}
+                    <button type="submit" class="mt-2 w-full rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 px-4 py-3 text-base font-semibold text-white transition hover:scale-[1.01] hover:from-cyan-400 hover:to-blue-500">
+                        Log In
                     </button>
                 </form>
 
-                <div class="mt-6 text-center">
-                    <p class="text-sm text-white/80">
-                        Access is private. Ask the administrator to create your account.
-                    </p>
-                </div>
+                <p class="mt-6 text-center text-xs text-slate-300">
+                    Need an account? Contact your administrator.
+                </p>
             </div>
         </div>
-
-        <div class="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-gray-50 to-transparent"></div>
-    </section>
-
-    <section id="contact" class="py-16 bg-gradient-to-br from-gray-900 to-gray-800 text-white">
-        <div class="container mx-auto px-6 text-center">
-            <h2 class="text-3xl md:text-4xl font-bold mb-6">Ready to Get Started?</h2>
-            <p class="text-lg text-gray-300 mb-8">Ask your administrator to add your account to the system.</p>
-            <a href="#hero" class="px-8 py-4 bg-cyan-500 hover:bg-cyan-600 text-white font-semibold rounded-lg shadow-lg transition-all duration-300 transform hover:scale-105">
-                Back to Top
-            </a>
-        </div>
-    </section>
-
-@endsection
+    </main>
+</body>
+</html>
