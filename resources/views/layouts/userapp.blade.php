@@ -46,7 +46,7 @@
                 <!-- User Avatar in Sidebar -->
                 <div class="flex items-center mb-4 p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200">
                     <a href="{{ route('userprofile.index') }}" class="flex items-center">
-                        <img src="{{ Auth::user()->profile_picture ? asset('images/' . Auth::user()->profile_picture)  : asset('useravatar.avif') }}"
+                        <img src="{{ Auth::user()->profile_picture ?: asset('useravatar.avif') }}"
                             alt="User Avatar"
                             class="w-10 h-10 rounded-full mr-3">
                         <div>
@@ -89,7 +89,7 @@
                         <!-- User Avatar in Top Header -->
                         <div class="flex items-center space-x-2">
                             <a href="{{ route('userprofile.index') }}">
-                                <img src="{{ Auth::user()->profile_picture ? asset('images/' . Auth::user()->profile_picture) : asset('useravatar.avif') }}"
+                                <img src="{{ Auth::user()->profile_picture ?: asset('useravatar.avif') }}"
                                     alt="User Avatar"class="w-9 h-9 rounded-full">
                             </a>
                         </div>
@@ -99,7 +99,7 @@
 
             <!-- Main Content Area -->
             <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
-                
+
                 <!-- Dynamic Content -->
                 @yield('content')
             </main>

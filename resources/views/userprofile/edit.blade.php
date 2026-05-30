@@ -31,8 +31,8 @@
                         </h2>
                         <div class="flex items-center space-x-6">
                             <div class="shrink-0">
-                                <img id="profile_preview"
-                                     src="{{ $user->profile_picture ? asset('images/' . $user->profile_picture) : asset('useravatar.avif') }}"
+                                  <img id="profile_preview"
+                                      src="{{ $user->profile_picture ?: asset('useravatar.avif') }}"
                                      class="h-20 w-20 rounded-full object-cover border-2 border-gray-200 shadow-sm">
                             </div>
                             <div class="flex-1">

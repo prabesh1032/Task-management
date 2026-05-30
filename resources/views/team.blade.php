@@ -60,7 +60,7 @@
                             <div class="flex items-center">
                                 <div class="flex-shrink-0 h-10 w-10">
                                         <img class="h-10 w-10 rounded-full object-cover"
-                                             src="{{ $user->profile_picture ? asset('images/' . $user->profile_picture) : asset('useravatar.avif') }}"
+                                             src="{{ $user->profile_picture ?: asset('useravatar.avif') }}"
                                              alt="{{ $user->name }}">
                                 </div>
                                 <div class="ml-4">

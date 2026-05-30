@@ -6,21 +6,19 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up() 
+    public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
             $table->string('profile_picture')->nullable();
-            $table->string('role')->default('member'); // Default role as 'member'
+            $table->string('role')->default('member');
+            $table->string('profile_picture_public_id')->nullable()->after('profile_picture');
         });
     }
 
-    public function down()
+    public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['profile_picture', 'role']);
+            $table->dropColumn(['profile_picture', 'role', 'profile_picture_public_id']);
         });
     }
 };

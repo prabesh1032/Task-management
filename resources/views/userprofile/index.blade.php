@@ -13,7 +13,7 @@
             </a>
             <div class="flex flex-col md:flex-row items-center">
                 <div class="relative mb-4 md:mb-0">
-                    <img src="{{ $user->profile_picture ? asset('images/' . $user->profile_picture) : asset('useravatar.avif') }}"
+                    <img src="{{ $user->profile_picture ?: asset('useravatar.avif') }}"
                          alt="Profile Picture"
                          class="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-white/20 object-cover shadow-lg">
                     <div class="absolute bottom-0 right-0 bg-white rounded-full p-2 shadow-md">

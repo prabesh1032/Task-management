@@ -46,7 +46,7 @@
             <label class="block text-sm font-medium mb-2">Profile Photo (optional)</label>
             <div class="flex items-center space-x-4 mb-2">
                 <div class="shrink-0">
-                    <img id="profile_preview" class="h-16 w-16 rounded-full object-cover" src="{{ $team->profile_picture ? asset('images/' . $team->profile_picture) : asset('useravatar.avif') }}" alt="Preview">
+                    <img id="profile_preview" class="h-16 w-16 rounded-full object-cover" src="{{ $team->profile_picture ?: asset('useravatar.avif') }}" alt="Preview">
                 </div>
                 <input type="file" name="profile_picture" accept="image/*" onchange="document.getElementById('profile_preview').src = window.URL.createObjectURL(this.files[0])">
             </div>

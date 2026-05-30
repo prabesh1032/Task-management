@@ -22,6 +22,7 @@ class User extends Authenticatable
         'password',
         'role',
         'profile_picture', // Added profile picture field
+        'profile_picture_public_id',
     ];
 
     /**

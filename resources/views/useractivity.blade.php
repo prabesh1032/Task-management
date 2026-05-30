@@ -18,7 +18,7 @@
                     <!-- User Avatar -->
                     <div class="flex-shrink-0 relative">
                         <img class="h-10 w-10 rounded-full object-cover"
-                            src="{{ $user->profile_picture ? asset('images/' . $user->profile_picture) : asset('useravatar.avif') }}"
+                            src="{{ $user->profile_picture ?: asset('useravatar.avif') }}"
                             alt="{{ $user->name }}">
                         <span class="absolute bottom-0 right-0 bg-green-500 rounded-full w-3 h-3 border-2 border-white"></span>
                     </div>

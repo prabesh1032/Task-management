@@ -6,7 +6,6 @@ use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 
 class TaskController extends Controller
 {
@@ -14,12 +13,10 @@ class TaskController extends Controller
     {
         $query = Task::with('assignedTo');
 
-        // Status filter
         if ($request->has('status') && in_array($request->status, ['pending', 'in_progress', 'completed'])) {
             $query->where('status', $request->status);
         }
 
-        // Priority filter
         if ($request->has('priority') && in_array($request->priority, ['high', 'medium', 'low'])) {
             $query->where('priority', $request->priority);
         }
@@ -31,30 +28,29 @@ class TaskController extends Controller
 
     public function create()
     {
-        $users = User::all(); // Fetch users to assign tasks
+        $users = User::all();
         return view('tasks.create', compact('users'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'title' => 'required|max:255',
-            'description' => 'nullable',
-            'priority' => 'required|in:low,medium,high',
-            'due_date' => 'required|date',
-            'assigned_to' => 'required|exists:users,id',
-            'todo_checklist' => 'nullable|array',
+            'title'            => 'required|max:255',
+            'description'      => 'nullable',
+            'priority'         => 'required|in:low,medium,high',
+            'due_date'         => 'required|date',
+            'assigned_to'      => 'required|exists:users,id',
+            'todo_checklist'   => 'nullable|array',
             'todo_checklist.*' => 'nullable|string|max:255',
         ]);
 
         $taskData = $request->except('todo_checklist');
 
-        // Initialize checklist with false values
         $checklist = [];
         if ($request->has('todo_checklist')) {
             foreach ($request->todo_checklist as $item) {
                 if (!empty($item)) {
-                    $checklist[$item] = false; // All items start as not completed
+                    $checklist[$item] = false;
                 }
             }
         }
@@ -68,26 +64,22 @@ class TaskController extends Controller
     public function update(Request $request, Task $task)
     {
         $request->validate([
-            'title' => 'required|max:255',
-            'description' => 'nullable',
-            'priority' => 'required|in:low,medium,high',
-            'due_date' => 'required|date',
-            'assigned_to' => 'required|exists:users,id',
-            'todo_checklist' => 'nullable|array',
+            'title'            => 'required|max:255',
+            'description'      => 'nullable',
+            'priority'         => 'required|in:low,medium,high',
+            'due_date'         => 'required|date',
+            'assigned_to'      => 'required|exists:users,id',
+            'todo_checklist'   => 'nullable|array',
             'todo_checklist.*' => 'nullable|string|max:255',
         ]);
 
         $taskData = $request->except('todo_checklist');
 
-        // Get current checklist to preserve completion status
         $currentChecklist = json_decode($task->todo_checklist, true) ?? [];
-
-        // Initialize new checklist
-        $newChecklist = [];
+        $newChecklist     = [];
         if ($request->has('todo_checklist')) {
             foreach ($request->todo_checklist as $item) {
                 if (!empty($item)) {
-                    // Preserve completion status if item exists in current checklist
                     $newChecklist[$item] = $currentChecklist[$item] ?? false;
                 }
             }
@@ -98,6 +90,7 @@ class TaskController extends Controller
 
         return redirect()->route('tasks.index')->with('success', 'Task updated successfully.');
     }
+
     public function show(Task $task)
     {
         return view('tasks.show', compact('task'));
@@ -105,13 +98,12 @@ class TaskController extends Controller
 
     public function edit(Task $task)
     {
-        $users = User::all(); // Fetch users to reassign tasks
+        $users = User::all();
         return view('tasks.edit', compact('task', 'users'));
     }
 
     public function destroy(Task $task)
     {
-
         $task->delete();
         return redirect()->route('tasks.index')->with('success', 'Task deleted successfully.');
     }
