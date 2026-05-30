@@ -16,6 +16,7 @@
         <i class="ri-inbox-line text-5xl text-indigo-400 mb-4"></i>
         <h3 class="text-xl font-medium text-gray-800">No tasks assigned</h3>
         <p class="text-gray-600 mt-2">You currently have no tasks. Check back later or contact your manager.</p>
+        
     </div>
     @else
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
