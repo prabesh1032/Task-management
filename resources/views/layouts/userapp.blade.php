@@ -6,6 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'TaskFlow') }} | @yield('title')</title>
+    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -30,7 +31,9 @@
         <!-- Logo -->
         <div class="flex items-center gap-3 px-5 py-4 border-b border-gray-200">
             <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center flex-shrink-0">
-                <i class="ri-task-line text-white text-base"></i>
+                <div class="w-5 h-5 rounded-md bg-white flex items-center justify-center">
+                    <i class="ri-check-line text-indigo-600 text-sm font-bold"></i>
+                </div>
             </div>
             <span class="font-semibold text-gray-900 text-lg">TaskFlow</span>
         </div>
