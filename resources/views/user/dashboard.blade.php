@@ -11,35 +11,37 @@
     <p class="text-gray-500 mb-8">
         Here's a quick overview of your tasks and recent updates.
     </p>
-    <!-- Top Stats -->
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-        <div class="bg-white rounded-xl border border-gray-100 p-5 flex items-center justify-between">
+    <!-- Top Stats (4 cards) -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex items-center gap-3">
+            <div class="p-2.5 rounded-lg bg-indigo-50 text-indigo-600"><i class="ri-stack-line text-lg"></i></div>
             <div>
-                <p class="text-xs font-medium text-gray-500">Total Tasks</p>
-                <p class="text-2xl font-semibold mt-1">{{ ($pendingTasks ?? 0) + ($inProgressTasks ?? 0) + ($completedTasks ?? 0) }}</p>
-            </div>
-            <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
-                <i class="ri-todo-line text-xl"></i>
+                <p class="text-xs text-gray-500">Total</p>
+                <p class="text-xl font-bold text-gray-900">{{ $totalTasks ?? (($pendingTasks ?? 0) + ($inProgressTasks ?? 0) + ($completedTasks ?? 0) + ($overdueTasks ?? 0)) }}</p>
             </div>
         </div>
 
-        <div class="bg-white rounded-xl border border-gray-100 p-5 flex items-center justify-between">
+        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex items-center gap-3">
+            <div class="p-2.5 rounded-lg bg-blue-50 text-blue-600"><i class="ri-loader-4-line text-lg"></i></div>
             <div>
-                <p class="text-xs font-medium text-gray-500">Completed</p>
-                <p class="text-2xl font-semibold mt-1">{{ $completedTasks ?? 0 }}</p>
-            </div>
-            <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center">
-                <i class="ri-checkbox-circle-line text-xl"></i>
+                <p class="text-xs text-gray-500">In Progress</p>
+                <p class="text-xl font-bold text-gray-900">{{ $inProgressTasks ?? 0 }}</p>
             </div>
         </div>
 
-        <div class="bg-white rounded-xl border border-gray-100 p-5 flex items-center justify-between">
+        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex items-center gap-3">
+            <div class="p-2.5 rounded-lg bg-green-50 text-green-600"><i class="ri-checkbox-circle-line text-lg"></i></div>
             <div>
-                <p class="text-xs font-medium text-gray-500">Team Members</p>
-                <p class="text-2xl font-semibold mt-1">{{ $teamMembersCount ?? 0 }}</p>
+                <p class="text-xs text-gray-500">Completed</p>
+                <p class="text-xl font-bold text-gray-900">{{ $completedTasks ?? 0 }}</p>
             </div>
-            <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center">
-                <i class="ri-team-line text-xl"></i>
+        </div>
+
+        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex items-center gap-3">
+            <div class="p-2.5 rounded-lg bg-red-50 text-red-600"><i class="ri-alarm-warning-line text-lg"></i></div>
+            <div>
+                <p class="text-xs text-gray-500">Overdue</p>
+                <p class="text-xl font-bold text-gray-900">{{ $overdueTasks ?? 0 }}</p>
             </div>
         </div>
     </div>
@@ -60,60 +62,6 @@
             <div style="position:relative; height:280px; width:100%">
                 <canvas id="priorityChart"></canvas>
             </div>
-        </div>
-    </div>
-
-    <!-- Recent Activities Section -->
-    <div class="bg-white shadow-md rounded-lg overflow-hidden mt-6">
-        <div class="p-6">
-            <h2 class="text-2xl font-bold text-indigo-700 flex items-center space-x-3">
-                <i class="ri-timer-line text-3xl"></i>
-                <span>Recent Activities</span>
-            </h2>
-            <p class="text-sm text-gray-500 mt-2">Keep track of your latest tasks and progress.</p>
-        </div>
-        <div class="p-6">
-            @if($recentTasks->count())
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="bg-indigo-100 text-indigo-800 uppercase text-sm font-semibold">
-                            <th class="px-6 py-4">Task</th>
-                            <th class="px-6 py-4">Status</th>
-                            <th class="px-6 py-4">Due Date</th>
-                            <th class="px-6 py-4 text-right">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($recentTasks as $task)
-                        <tr class="hover:bg-gray-50 transition duration-150">
-                            <td class="px-6 py-4 font-medium text-gray-800">{{ $task->title }}</td>
-                            <td class="px-6 py-4">
-                                <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold
-                                    @if($task->status == 'pending') bg-yellow-100 text-yellow-700
-                                    @elseif($task->status == 'in_progress') bg-blue-100 text-blue-700
-                                    @elseif($task->status == 'completed') bg-green-100 text-green-700
-                                    @elseif($task->status == 'overdue') bg-red-100 text-red-700
-                                    @else bg-gray-100 text-gray-700
-                                    @endif">
-                                    {{ ucfirst(str_replace('_', ' ', $task->status)) }}
-                                </span>
-                            </td>
-                            <td class="px-6 py-4">{{ $task->due_date ? $task->due_date->format('M d, Y') : 'N/A' }}</td>
-                            <td class="px-6 py-4 text-right">
-                                <a href="{{ route('user.tasks.index') }}" class="inline-flex items-center text-indigo-600 hover:text-indigo-800 space-x-1">
-                                    <i class="ri-eye-line"></i>
-                                    <span>View</span>
-                                </a>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-            @else
-            <p class="text-center text-gray-500 italic mt-4">No recent tasks assigned.</p>
-            @endif
         </div>
     </div>
 </div>

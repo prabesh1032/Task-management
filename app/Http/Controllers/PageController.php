@@ -53,8 +53,11 @@ class PageController extends Controller
         $completedTasks = Task::where('assigned_to', $user->id)
             ->where('status', 'completed')
             ->count();
+
+        // Overdue: any non-completed task whose due_date is in the past
         $overdueTasks = Task::where('assigned_to', $user->id)
-            ->where('status', 'overdue')
+            ->where('status', '!=', 'completed')
+            ->whereDate('due_date', '<', now())
             ->count();
 
         // Task Priority Counts
@@ -77,7 +80,7 @@ class PageController extends Controller
             'lowPriorityTasks' => $lowPriorityTasks,
             'mediumPriorityTasks' => $mediumPriorityTasks,
             'highPriorityTasks' => $highPriorityTasks,
-            'totalTasks' => $pendingTasks + $inProgressTasks + $completedTasks + $overdueTasks
+            'totalTasks' => Task::where('assigned_to', $user->id)->count()
         ]);
     }
 }

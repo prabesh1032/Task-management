@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -8,27 +9,32 @@ use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class UserProfileController extends Controller
 {
-    /**
-     * Display the user's profile.
-     */
     public function index()
     {
         $user = Auth::user();
-        return view('userprofile.index', compact('user'));
+
+        $totalTasks     = Task::where('assigned_to', $user->id)->count();
+        $completedTasks = Task::where('assigned_to', $user->id)->where('status', 'completed')->count();
+        $pendingTasks   = Task::where('assigned_to', $user->id)->where('status', 'pending')->count();
+        $inProgressTasks = Task::where('assigned_to', $user->id)->where('status', 'in_progress')->count();
+        $recentTasks    = Task::where('assigned_to', $user->id)->latest()->take(3)->get();
+
+        return view('userprofile.index', compact(
+            'user',
+            'totalTasks',
+            'completedTasks',
+            'pendingTasks',
+            'inProgressTasks',
+            'recentTasks'
+        ));
     }
 
-    /**
-     * Show the form for editing the user's profile.
-     */
     public function edit()
     {
         $user = Auth::user();
         return view('userprofile.edit', compact('user'));
     }
 
-    /**
-     * Update the user's profile.
-     */
     public function update(Request $request)
     {
         $request->validate([
@@ -41,14 +47,11 @@ class UserProfileController extends Controller
 
         $user = Auth::user();
 
-        // Handle profile picture upload via Cloudinary
         if ($request->hasFile('profile_picture')) {
-            // Delete old image from Cloudinary if exists
             if ($user->profile_picture_public_id) {
                 Cloudinary::uploadApi()->destroy($user->profile_picture_public_id);
             }
 
-            // Upload new image to Cloudinary
             $uploaded = Cloudinary::uploadApi()->upload(
                 $request->file('profile_picture')->getRealPath(),
                 ['folder' => 'taskmanager/profiles']
@@ -58,11 +61,9 @@ class UserProfileController extends Controller
             $user->profile_picture_public_id = $uploaded['public_id'] ?? null;
         }
 
-        // Update basic info
         $user->name  = $request->name;
         $user->email = $request->email;
 
-        // Update password if provided
         if ($request->filled('new_password')) {
             $user->password = Hash::make($request->new_password);
         }

@@ -4,44 +4,7 @@
 
 @section('content')
 
-{{-- Summary Stats --}}
-@php
-    $totalTasksCount = $tasks->count();
-    $completedCount  = $tasks->where('status', 'completed')->count();
-    $inProgressCount = $tasks->where('status', 'in_progress')->count();
-    $overdueCount    = $tasks->filter(fn($t) => $t->due_date->isPast() && $t->status !== 'completed')->count();
-@endphp
-
-<div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-    <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex items-center gap-3">
-        <div class="p-2.5 rounded-lg bg-indigo-50 text-indigo-600"><i class="ri-stack-line text-lg"></i></div>
-        <div>
-            <p class="text-xs text-gray-500">Total</p>
-            <p class="text-xl font-bold text-gray-900">{{ $totalTasksCount }}</p>
-        </div>
-    </div>
-    <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex items-center gap-3">
-        <div class="p-2.5 rounded-lg bg-blue-50 text-blue-600"><i class="ri-loader-4-line text-lg"></i></div>
-        <div>
-            <p class="text-xs text-gray-500">In Progress</p>
-            <p class="text-xl font-bold text-gray-900">{{ $inProgressCount }}</p>
-        </div>
-    </div>
-    <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex items-center gap-3">
-        <div class="p-2.5 rounded-lg bg-green-50 text-green-600"><i class="ri-checkbox-circle-line text-lg"></i></div>
-        <div>
-            <p class="text-xs text-gray-500">Completed</p>
-            <p class="text-xl font-bold text-gray-900">{{ $completedCount }}</p>
-        </div>
-    </div>
-    <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex items-center gap-3">
-        <div class="p-2.5 rounded-lg bg-red-50 text-red-600"><i class="ri-alarm-warning-line text-lg"></i></div>
-        <div>
-            <p class="text-xs text-gray-500">Overdue</p>
-            <p class="text-xl font-bold text-gray-900">{{ $overdueCount }}</p>
-        </div>
-    </div>
-</div>
+{{-- Summary Stats removed — moved to user dashboard --}}
 
 {{-- Task Grid --}}
 @if($tasks->isEmpty())
