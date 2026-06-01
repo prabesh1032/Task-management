@@ -3,179 +3,145 @@
 @section('title', 'My Tasks')
 
 @section('content')
-<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
-    @if($tasks->isEmpty())
-    <div class="bg-gradient-to-br from-indigo-50 to-white border border-indigo-100 rounded-2xl p-12 text-center max-w-2xl mx-auto shadow-sm">
-        <div class="w-20 h-20 rounded-full bg-indigo-100 flex items-center justify-center mx-auto mb-5">
-            <i class="ri-inbox-line text-4xl text-indigo-400"></i>
-        </div>
-        <h3 class="text-xl font-semibold text-gray-800">No tasks assigned</h3>
-        <p class="text-gray-500 mt-2">You currently have no tasks. Check back later or contact your manager.</p>
-    </div>
-    @else
+{{-- Summary Stats --}}
+@php
+    $totalTasksCount = $tasks->count();
+    $completedCount  = $tasks->where('status', 'completed')->count();
+    $inProgressCount = $tasks->where('status', 'in_progress')->count();
+    $overdueCount    = $tasks->filter(fn($t) => $t->due_date->isPast() && $t->status !== 'completed')->count();
+@endphp
 
-    <!-- Summary stats bar -->
-    @php
-        $totalTasksCount = $tasks->count();
-        $completedTasks = $tasks->where('status', 'completed')->count();
-        $inProgressTasks = $tasks->where('status', 'in_progress')->count();
-        $overdueTasks = $tasks->filter(fn($t) => $t->due_date->isPast() && $t->status !== 'completed')->count();
-    @endphp
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8 max-w-5xl mx-auto">
-        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex items-center gap-4">
-            <div class="w-11 h-11 rounded-xl bg-gray-100 flex items-center justify-center text-gray-600"><i class="ri-stack-line text-xl"></i></div>
-            <div>
-                <p class="text-2xl font-bold text-gray-900 leading-none">{{ $totalTasksCount }}</p>
-                <p class="text-xs text-gray-500 mt-1">Total Tasks</p>
-            </div>
-        </div>
-        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex items-center gap-4">
-            <div class="w-11 h-11 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600"><i class="ri-loader-4-line text-xl"></i></div>
-            <div>
-                <p class="text-2xl font-bold text-gray-900 leading-none">{{ $inProgressTasks }}</p>
-                <p class="text-xs text-gray-500 mt-1">In Progress</p>
-            </div>
-        </div>
-        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex items-center gap-4">
-            <div class="w-11 h-11 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600"><i class="ri-checkbox-circle-line text-xl"></i></div>
-            <div>
-                <p class="text-2xl font-bold text-gray-900 leading-none">{{ $completedTasks }}</p>
-                <p class="text-xs text-gray-500 mt-1">Completed</p>
-            </div>
-        </div>
-        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex items-center gap-4">
-            <div class="w-11 h-11 rounded-xl bg-red-50 flex items-center justify-center text-red-600"><i class="ri-alarm-warning-line text-xl"></i></div>
-            <div>
-                <p class="text-2xl font-bold text-gray-900 leading-none">{{ $overdueTasks }}</p>
-                <p class="text-xs text-gray-500 mt-1">Overdue</p>
-            </div>
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex items-center gap-3">
+        <div class="p-2.5 rounded-lg bg-indigo-50 text-indigo-600"><i class="ri-stack-line text-lg"></i></div>
+        <div>
+            <p class="text-xs text-gray-500">Total</p>
+            <p class="text-xl font-bold text-gray-900">{{ $totalTasksCount }}</p>
         </div>
     </div>
+    <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex items-center gap-3">
+        <div class="p-2.5 rounded-lg bg-blue-50 text-blue-600"><i class="ri-loader-4-line text-lg"></i></div>
+        <div>
+            <p class="text-xs text-gray-500">In Progress</p>
+            <p class="text-xl font-bold text-gray-900">{{ $inProgressCount }}</p>
+        </div>
+    </div>
+    <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex items-center gap-3">
+        <div class="p-2.5 rounded-lg bg-green-50 text-green-600"><i class="ri-checkbox-circle-line text-lg"></i></div>
+        <div>
+            <p class="text-xs text-gray-500">Completed</p>
+            <p class="text-xl font-bold text-gray-900">{{ $completedCount }}</p>
+        </div>
+    </div>
+    <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex items-center gap-3">
+        <div class="p-2.5 rounded-lg bg-red-50 text-red-600"><i class="ri-alarm-warning-line text-lg"></i></div>
+        <div>
+            <p class="text-xs text-gray-500">Overdue</p>
+            <p class="text-xl font-bold text-gray-900">{{ $overdueCount }}</p>
+        </div>
+    </div>
+</div>
 
-    <!-- Task Cards -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+{{-- Task Grid --}}
+@if($tasks->isEmpty())
+<div class="flex flex-col items-center justify-center py-20 bg-white rounded-xl border border-gray-100">
+    <div class="w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center mb-3">
+        <i class="ri-inbox-line text-2xl text-gray-400"></i>
+    </div>
+    <p class="text-sm font-medium text-gray-600">No tasks assigned</p>
+    <p class="text-xs text-gray-400 mt-1">Check back later or contact your manager.</p>
+</div>
+@else
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
     @foreach($tasks as $task)
     @php
-        $isOverdue = $task->due_date->isPast() && $task->status !== 'completed';
+        $checklist      = json_decode($task->todo_checklist, true) ?? [];
+        $totalItems     = count($checklist);
+        $doneItems      = $totalItems > 0 ? array_sum($checklist) : 0;
+        $progressPct    = $totalItems > 0 ? round(($doneItems / $totalItems) * 100) : 0;
+        $progressColor  = $progressPct >= 80 ? 'bg-green-500' : ($progressPct <= 30 ? 'bg-red-400' : 'bg-blue-500');
+        $isOverdue      = $task->status !== 'completed' && $task->due_date->isPast();
 
-        // status color theme
-        $statusTheme = match($task->status) {
-            'completed'   => ['bg' => 'bg-emerald-500', 'badge' => 'bg-emerald-50 text-emerald-700 border-emerald-200', 'dot' => 'bg-emerald-500'],
-            'in_progress' => ['bg' => 'bg-blue-500',    'badge' => 'bg-blue-50 text-blue-700 border-blue-200',    'dot' => 'bg-blue-500'],
-            'overdue'     => ['bg' => 'bg-red-500',     'badge' => 'bg-red-50 text-red-700 border-red-200',        'dot' => 'bg-red-500'],
-            default       => ['bg' => 'bg-amber-500',   'badge' => 'bg-amber-50 text-amber-700 border-amber-200',  'dot' => 'bg-amber-500'],
+        $priorityClass = match($task->priority) {
+            'high'   => 'bg-red-50 text-red-700 border border-red-100',
+            'medium' => 'bg-amber-50 text-amber-700 border border-amber-100',
+            default  => 'bg-green-50 text-green-700 border border-green-100',
         };
-
-        $priorityTheme = match($task->priority) {
-            'high'   => ['text' => 'text-red-700',   'bg' => 'bg-red-50',   'icon' => 'ri-fire-fill', 'border' => 'border-red-200'],
-            'medium' => ['text' => 'text-amber-700', 'bg' => 'bg-amber-50', 'icon' => 'ri-flag-fill', 'border' => 'border-amber-200'],
-            default  => ['text' => 'text-emerald-700','bg' => 'bg-emerald-50','icon' => 'ri-leaf-fill', 'border' => 'border-emerald-200'],
+        $priorityDot = match($task->priority) {
+            'high'   => 'bg-red-500',
+            'medium' => 'bg-amber-500',
+            default  => 'bg-green-500',
         };
-
-        $checklist = json_decode($task->todo_checklist, true) ?? [];
-        $completedCount = is_array($checklist) ? array_sum($checklist) : 0;
-        $totalItems = is_array($checklist) ? count($checklist) : 0;
-        $checklistPct = $totalItems > 0 ? round(($completedCount / $totalItems) * 100) : 0;
+        $statusClass = match($task->status) {
+            'completed'   => 'bg-green-50 text-green-700 border border-green-100',
+            'in_progress' => 'bg-blue-50 text-blue-700 border border-blue-100',
+            default       => 'bg-amber-50 text-amber-700 border border-amber-100',
+        };
     @endphp
 
-    <div class="group relative bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg hover:border-gray-300 transition-all duration-200">
-        <!-- Top gradient bar based on priority -->
-        <div class="p-5 pt-6">
-            <!-- Header: Title + Status -->
-            <div class="flex justify-between items-start gap-3 mb-4">
-                <div class="flex-1 min-w-0">
-                    <div class="flex items-center gap-2 mb-2">
-                        <div class="w-8 h-8 rounded-lg {{ $priorityTheme['bg'] }} flex items-center justify-center {{ $priorityTheme['text'] }}">
-                            <i class="{{ $priorityTheme['icon'] }} text-sm"></i>
-                        </div>
-                        <h3 class="font-bold text-gray-900 text-lg truncate">{{ $task->title }}</h3>
-                    </div>
-                </div>
-                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border {{ $statusTheme['badge'] }} shrink-0">
-                    <span class="w-1.5 h-1.5 rounded-full {{ $statusTheme['dot'] }}"></span>
+    <div class="bg-white rounded-xl border border-gray-100 hover:border-indigo-200 hover:shadow-sm transition-all duration-150 flex flex-col">
+
+        {{-- Card Top --}}
+        <div class="px-5 pt-5 pb-4">
+
+            {{-- Badges --}}
+            <div class="flex items-center justify-between mb-3">
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium {{ $priorityClass }}">
+                    <span class="w-1.5 h-1.5 rounded-full {{ $priorityDot }}"></span>
+                    {{ ucfirst($task->priority) }}
+                </span>
+                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium {{ $statusClass }}">
                     {{ str_replace('_', ' ', ucfirst($task->status)) }}
                 </span>
             </div>
 
-            <!-- Meta Info Grid -->
-            <div class="grid grid-cols-2 gap-4 mb-4">
-                <!-- Created At -->
-                <div class="flex items-center gap-2.5 p-2 rounded-lg bg-gray-50/80">
-                    <div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center text-purple-600">
-                        <i class="ri-time-line text-sm"></i>
-                    </div>
-                    <div>
-                        <p class="text-xs text-gray-400">Assigned</p>
-                        <p class="text-sm font-semibold text-gray-800">{{ $task->created_at->diffForHumans() }}</p>
-                    </div>
-                </div>
+            {{-- Title + Description --}}
+            <h2 class="text-sm font-semibold text-gray-900 mb-1 leading-snug">{{ $task->title }}</h2>
+            <p class="text-xs text-gray-400 leading-relaxed line-clamp-2">
+                {{ Str::limit($task->description, 100) }}
+            </p>
 
-                <!-- Due Date -->
-                <div class="flex items-center gap-2.5 p-2 rounded-lg {{ $isOverdue ? 'bg-red-50/80' : 'bg-gray-50/80' }}">
-                    <div class="w-8 h-8 rounded-full {{ $isOverdue ? 'bg-red-100 text-red-600' : 'bg-blue-100 text-blue-600' }} flex items-center justify-center">
-                        <i class="ri-calendar-check-line text-sm"></i>
-                    </div>
-                    <div>
-                        <p class="text-xs text-gray-400">Due Date</p>
-                        <p class="text-sm font-semibold {{ $isOverdue ? 'text-red-600' : 'text-gray-800' }}">
-                            {{ $task->due_date->format('M j, Y') }}
-                            @if($isOverdue)
-                                <span class="text-xs text-red-500 ml-1">(Overdue)</span>
-                            @endif
-                        </p>
-                    </div>
+            {{-- Meta --}}
+            <div class="mt-3 space-y-1.5">
+                <div class="flex items-center gap-2 text-xs text-gray-500">
+                    <i class="ri-calendar-line text-gray-400"></i>
+                    <span class="{{ $isOverdue ? 'text-red-500 font-medium' : '' }}">
+                        {{ $task->due_date->format('d M, Y') }}
+                        @if($isOverdue) · <span class="text-red-500">Overdue</span> @endif
+                    </span>
                 </div>
-
-                <!-- Priority Tag -->
-                <div class="flex items-center gap-2.5 p-2 rounded-lg bg-gray-50/80">
-                    <div class="w-8 h-8 rounded-full {{ $priorityTheme['bg'] }} flex items-center justify-center {{ $priorityTheme['text'] }}">
-                        <i class="ri-flag-fill text-sm"></i>
-                    </div>
-                    <div>
-                        <p class="text-xs text-gray-400">Priority</p>
-                        <p class="text-sm font-semibold {{ $priorityTheme['text'] }}">{{ ucfirst($task->priority) }}</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Checklist Progress Section -->
-            @if($totalItems > 0)
-            <div class="mb-5 p-3 rounded-lg bg-indigo-50/30 border border-indigo-100">
-                <div class="flex justify-between items-center mb-2">
-                    <div class="flex items-center gap-2">
-                        <i class="ri-checklist-line text-indigo-500 text-sm"></i>
-                        <span class="text-sm font-semibold text-gray-700">Checklist Progress</span>
-                    </div>
-                    <span class="text-xs font-bold text-indigo-600 bg-indigo-100 px-2 py-0.5 rounded-full">{{ $completedCount }}/{{ $totalItems }}</span>
-                </div>
-                <div class="relative">
-                    <div class="w-full bg-indigo-100 rounded-full h-2 overflow-hidden">
-                        <div class="bg-gradient-to-r from-indigo-500 to-indigo-600 h-2 rounded-full transition-all duration-700 ease-out"
-                             style="width: {{ $checklistPct }}%"></div>
-                    </div>
-                    <p class="text-right text-xs text-gray-500 mt-1 font-medium">{{ $checklistPct }}% Complete</p>
-                </div>
-            </div>
-            @endif
-
-            <!-- Footer with Action Button -->
-            <div class="flex items-center justify-between pt-3 border-t border-gray-100">
-                <div class="flex items-center gap-2 text-xs text-gray-400">
-                    <i class="ri-history-line"></i>
-                    <span>Updated {{ $task->updated_at->diffForHumans() }}</span>
-                </div>
-                <a href="{{ route('user.tasks.edit', $task->id) }}"
-                   class="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 hover:shadow-md transition-all duration-200 group-hover:scale-105">
-                    <i class="ri-edit-box-line"></i>
-                    Update Task
-                    <i class="ri-arrow-right-line text-sm group-hover:translate-x-0.5 transition-transform"></i>
-                </a>
             </div>
         </div>
+
+        {{-- Progress --}}
+        @if($totalItems > 0)
+        <div class="px-5 pb-4">
+            <div class="flex justify-between items-center mb-1.5">
+                <span class="text-xs text-gray-400">Progress</span>
+                <span class="text-xs font-semibold {{ $progressPct >= 80 ? 'text-green-600' : ($progressPct <= 30 ? 'text-red-500' : 'text-blue-600') }}">
+                    {{ $progressPct }}%
+                </span>
+            </div>
+            <div class="w-full bg-gray-100 rounded-full h-1.5">
+                <div class="{{ $progressColor }} h-1.5 rounded-full transition-all" style="width: {{ $progressPct }}%"></div>
+            </div>
+            <p class="text-xs text-gray-400 mt-1">{{ $doneItems }}/{{ $totalItems }} subtasks done</p>
+        </div>
+        @endif
+
+        {{-- Footer --}}
+        <div class="mt-auto px-5 py-3 border-t border-gray-100 flex items-center justify-between">
+            <span class="text-xs text-gray-400">{{ $task->updated_at->diffForHumans() }}</span>
+            <a href="{{ route('user.tasks.edit', $task->id) }}"
+               class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-indigo-600 text-white text-xs font-medium rounded-lg hover:bg-indigo-700 transition-colors">
+                <i class="ri-edit-box-line"></i> Update
+            </a>
+        </div>
+
     </div>
     @endforeach
 </div>
-    @endif
-</div>
+@endif
+
 @endsection
