@@ -46,6 +46,7 @@ class TeamController extends Controller
     {
         // Base query with counts
         $query = User::where('role', 'member')->withCount([
+            'assignedTasks',
             'assignedTasks as pending_tasks_count' => function($query) {
                 $query->where('status', 'pending');
             },
@@ -65,6 +66,9 @@ class TeamController extends Controller
                   ->orWhere('email', 'like', "%{$search}%");
             });
         }
+
+        $query->orderByDesc('assigned_tasks_count')
+              ->orderBy('name');
 
         // Pagination
         $users = $query->paginate(10);
