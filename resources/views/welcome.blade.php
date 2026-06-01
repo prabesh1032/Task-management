@@ -55,10 +55,6 @@
                             <input id="remember_me" type="checkbox" name="remember" class="rounded border-white/30 bg-slate-900/60 text-cyan-500 focus:ring-cyan-400/60">
                             Remember me
                         </label>
-
-                        @if (Route::has('password.request'))
-                            <a href="{{ route('password.request') }}" class="text-sm text-cyan-300 hover:text-cyan-200">Forgot password?</a>
-                        @endif
                     </div>
 
                     <button type="submit" class="mt-2 w-full rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 px-4 py-3 text-base font-semibold text-white transition hover:scale-[1.01] hover:from-cyan-400 hover:to-blue-500">
