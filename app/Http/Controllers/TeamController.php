@@ -69,17 +69,7 @@ class TeamController extends Controller
         // Pagination
         $users = $query->paginate(10);
 
-        // Additional stats for the summary cards
-        $stats = [
-            'total_users' => User::where('role', 'member')->count(),
-            'active_today' => User::where('role', 'member')->whereDate('last_active_at', today())->count(),
-            'total_completed' => \App\Models\Task::where('status', 'completed')->count(),
-            'avg_completion' => round(\App\Models\Task::where('status', 'completed')
-                ->selectRaw('COUNT(*) / COUNT(DISTINCT assigned_to) as avg')
-                ->value('avg'), 1)
-        ];
-
-        return view('useractivity', compact('users', 'stats',));
+        return view('useractivity', compact('users'));
     }
 }
 
