@@ -65,6 +65,34 @@
                 <p class="mt-6 text-center text-xs text-slate-300">
                     Need an account? Contact your administrator.
                 </p>
+                <div class="mt-5 border-t border-white/10 pt-4">
+    <p class="mb-3 text-center text-[10px] font-semibold uppercase tracking-widest text-slate-500">Demo credentials — click to fill</p>
+    <div class="grid grid-cols-2 gap-2">
+        <button type="button" onclick="fillCreds('admin@gmail.com','12345678')"
+            class="rounded-xl border border-white/10 bg-white/5 p-3 text-left transition hover:border-cyan-400/40 hover:bg-white/10">
+            <span class="mb-1 inline-block rounded-full border border-cyan-400/25 bg-cyan-400/10 px-2 py-0.5 text-[10px] font-semibold text-cyan-400">Admin</span>
+            <span class="block text-xs text-slate-300">admin@gmail.com</span>
+            <span class="block text-[11px] text-slate-500">Pass: 12345678</span>
+        </button>
+        <button type="button" onclick="fillCreds('user@gmail.com','12345678')"
+            class="rounded-xl border border-white/10 bg-white/5 p-3 text-left transition hover:border-indigo-400/40 hover:bg-white/10">
+            <span class="mb-1 inline-block rounded-full border border-indigo-400/25 bg-indigo-400/10 px-2 py-0.5 text-[10px] font-semibold text-indigo-400">User</span>
+            <span class="block text-xs text-slate-300">anita@taskflow.com</span>
+            <span class="block text-[11px] text-slate-500">Pass: anita@taskflow.com</span>
+        </button>
+    </div>
+    <p id="fill-hint" class="mt-2 min-h-[16px] text-center text-[11px] text-cyan-400"></p>
+</div>
+
+<script>
+function fillCreds(email, pass) {
+    document.getElementById('email').value = email;
+    document.getElementById('password').value = pass;
+    const hint = document.getElementById('fill-hint');
+    hint.textContent = 'Credentials filled — ready to log in';
+    setTimeout(() => hint.textContent = '', 3000);
+}
+</script>
             </div>
         </div>
     </main>
