@@ -74,11 +74,11 @@
             <span class="block text-xs text-slate-300">admin@gmail.com</span>
             <span class="block text-[11px] text-slate-500">Pass: 12345678</span>
         </button>
-        <button type="button" onclick="fillCreds('user@gmail.com','12345678')"
+        <button type="button" onclick="fillCreds('anita@taskflow.com','Pa$$w0rd!')"
             class="rounded-xl border border-white/10 bg-white/5 p-3 text-left transition hover:border-indigo-400/40 hover:bg-white/10">
             <span class="mb-1 inline-block rounded-full border border-indigo-400/25 bg-indigo-400/10 px-2 py-0.5 text-[10px] font-semibold text-indigo-400">User</span>
             <span class="block text-xs text-slate-300">anita@taskflow.com</span>
-            <span class="block text-[11px] text-slate-500">Pass: anita@taskflow.com</span>
+            <span class="block text-[11px] text-slate-500">Pass: Pa$$w0rd!</span>
         </button>
     </div>
     <p id="fill-hint" class="mt-2 min-h-[16px] text-center text-[11px] text-cyan-400"></p>
